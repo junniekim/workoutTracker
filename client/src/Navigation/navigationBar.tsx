@@ -5,8 +5,10 @@ const NavigationBar: React.FC = () => {
   const location = useLocation();
   return (
     <div className="navigation row">
-      <div className="navHeader col-6">Muscles</div>
-      <div className="navButtonHolder col-6">
+      <div className="navHeader col-12 col-md-6">
+        <h2 className="header">🔥Mooscles</h2>
+      </div>
+      <div className="navButtonHolder col-12 col-md-6">
         <Link
           to="/"
           className={`navButton ${location.pathname === "/" ? "active" : ""}`}
