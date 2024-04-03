@@ -46,3 +46,6 @@
 .text-right {
   text-align: right;
 }
+.align-text-center {
+  align-items: center;
+}

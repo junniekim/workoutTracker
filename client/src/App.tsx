@@ -8,7 +8,8 @@ import ProfilePage from "./profilePage/profilePage";
 import ProgressPage from "./progressPage/progressPage";
 import WorkoutListPage from "./workoutListPage/workoutListPage";
 import WorkoutLogPage from "./workoutLogPage/workoutLogPage";
-import NavigationBar from "./Navigation/navigationBar";
+import NavigationBar from "./navigation/navigationBar";
+import Footer from "./footer/footer";
 function App() {
   return (
     <Router>
@@ -23,6 +24,7 @@ function App() {
           <Route path="/workoutlog" Component={WorkoutLogPage} />
         </Routes>
       </div>
+      <Footer />
     </Router>
   );
 }

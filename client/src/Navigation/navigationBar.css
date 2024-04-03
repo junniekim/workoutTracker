@@ -1,0 +1,26 @@
+.navigation {
+  height: 60px;
+  background-color: #6082b6;
+  align-items: center;
+}
+.navHeader {
+}
+
+.navButtonHolder {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 20px;
+  gap: 30px;
+}
+.navButton {
+  color: black;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 500;
+}
+.navButton:hover {
+  color: white;
+}
+.active {
+  color: #fff; /* Or any color you like */
+}
