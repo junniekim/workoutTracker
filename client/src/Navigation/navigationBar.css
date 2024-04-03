@@ -1,15 +1,25 @@
 .navigation {
-  align-items: center;
+  //align-items: center;
   margin-top: 15px;
 }
 .navHeader {
 }
-
+.header {
+  font-weight: 450;
+}
+.hamburger {
+  display: none;
+  margin-left: auto;
+}
 .navButtonHolder {
   display: flex;
   justify-content: flex-end;
   padding: 10px 20px;
   gap: 30px;
+}
+.collapsed-menu {
+  display: flex;
+  flex-direction: column;
 }
 .navButton {
   color: black;
@@ -21,8 +31,15 @@
   color: grey;
 }
 .active {
-  color: grey; /* Or any color you like */
+  color: grey;
 }
-.header {
-  font-weight: 450;
+
+@media (max-width: 600px) {
+  .navButtonHolder {
+    display: none;
+  }
+
+  .hamburger {
+    display: block;
+  }
 }
