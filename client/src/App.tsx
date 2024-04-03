@@ -13,8 +13,8 @@ import Footer from "./footer/footer";
 function App() {
   return (
     <Router>
-      <NavigationBar />
       <div className="container">
+        <NavigationBar />
         <Routes>
           <Route path="/" Component={HomePage} />
           <Route path="/authenticate" Component={AuthenticatePage} />
@@ -23,8 +23,8 @@ function App() {
           <Route path="/workoutlist" Component={WorkoutListPage} />
           <Route path="/workoutlog" Component={WorkoutLogPage} />
         </Routes>
+        <Footer />
       </div>
-      <Footer />
     </Router>
   );
 }
