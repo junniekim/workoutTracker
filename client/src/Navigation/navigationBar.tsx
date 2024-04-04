@@ -5,7 +5,7 @@ const NavigationBar: React.FC = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 600px)");
+    const mediaQuery = window.matchMedia("(max-width: 768px)");
     const handleWindowResize = () => {
       if (!mediaQuery.matches) {
         setIsOpen(false);
