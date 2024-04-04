@@ -41,12 +41,12 @@ const NavigationBar: React.FC = () => {
           Home
         </Link>
         <Link
-          to="/profile"
+          to="/workoutlog"
           className={`navButton ${
-            location.pathname === "/profile" ? "active" : ""
+            location.pathname === "/workoutlog" ? "active" : ""
           }`}
         >
-          Profile
+          Tracker
         </Link>
         <Link
           to="/progress"
@@ -57,20 +57,21 @@ const NavigationBar: React.FC = () => {
           Progress
         </Link>
         <Link
+          to="/profile"
+          className={`navButton ${
+            location.pathname === "/profile" ? "active" : ""
+          }`}
+        >
+          Profile
+        </Link>
+
+        <Link
           to="/workoutlist"
           className={`navButton ${
             location.pathname === "/workoutlist" ? "active" : ""
           }`}
         >
           Customization
-        </Link>
-        <Link
-          to="/workoutlog"
-          className={`navButton ${
-            location.pathname === "/workoutlog" ? "active" : ""
-          }`}
-        >
-          Tracker
         </Link>
         <Link
           to="/authenticate"
@@ -89,14 +90,13 @@ const NavigationBar: React.FC = () => {
           >
             Home
           </Link>
-
           <Link
-            to="/profile"
+            to="/workoutlog"
             className={`navButton ${
-              location.pathname === "/profile" ? "active" : ""
+              location.pathname === "/workoutlog" ? "active" : ""
             }`}
           >
-            Profile
+            Tracker
           </Link>
           <Link
             to="/progress"
@@ -107,20 +107,20 @@ const NavigationBar: React.FC = () => {
             Progress
           </Link>
           <Link
+            to="/profile"
+            className={`navButton ${
+              location.pathname === "/profile" ? "active" : ""
+            }`}
+          >
+            Profile
+          </Link>
+          <Link
             to="/workoutlist"
             className={`navButton ${
               location.pathname === "/workoutlist" ? "active" : ""
             }`}
           >
             Customization
-          </Link>
-          <Link
-            to="/workoutlog"
-            className={`navButton ${
-              location.pathname === "/workoutlog" ? "active" : ""
-            }`}
-          >
-            Tracker
           </Link>
           <Link
             to="/authenticate"
