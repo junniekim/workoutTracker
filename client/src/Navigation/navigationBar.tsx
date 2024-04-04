@@ -33,20 +33,12 @@ const NavigationBar: React.FC = () => {
           </button>
         </div>
       </div>
-      <div className="navButtonHolder col-12 col-md-6">
+      <div className="navButtonHolder text-nowrap col-12 col-md-6">
         <Link
           to="/"
           className={`navButton ${location.pathname === "/" ? "active" : ""}`}
         >
           Home
-        </Link>
-        <Link
-          to="/authenticate"
-          className={`navButton ${
-            location.pathname === "/authenticate" ? "active" : ""
-          }`}
-        >
-          Authenticate
         </Link>
         <Link
           to="/profile"
@@ -70,7 +62,7 @@ const NavigationBar: React.FC = () => {
             location.pathname === "/workoutlist" ? "active" : ""
           }`}
         >
-          List
+          Customization
         </Link>
         <Link
           to="/workoutlog"
@@ -78,7 +70,15 @@ const NavigationBar: React.FC = () => {
             location.pathname === "/workoutlog" ? "active" : ""
           }`}
         >
-          Log
+          Tracker
+        </Link>
+        <Link
+          to="/authenticate"
+          className={`navButton ${
+            location.pathname === "/authenticate" ? "active" : ""
+          }`}
+        >
+          Sign In
         </Link>
       </div>
       {isOpen && (
@@ -89,14 +89,7 @@ const NavigationBar: React.FC = () => {
           >
             Home
           </Link>
-          <Link
-            to="/authenticate"
-            className={`navButton ${
-              location.pathname === "/authenticate" ? "active" : ""
-            }`}
-          >
-            Authenticate
-          </Link>
+
           <Link
             to="/profile"
             className={`navButton ${
@@ -119,7 +112,7 @@ const NavigationBar: React.FC = () => {
               location.pathname === "/workoutlist" ? "active" : ""
             }`}
           >
-            List
+            Customization
           </Link>
           <Link
             to="/workoutlog"
@@ -127,7 +120,15 @@ const NavigationBar: React.FC = () => {
               location.pathname === "/workoutlog" ? "active" : ""
             }`}
           >
-            Log
+            Tracker
+          </Link>
+          <Link
+            to="/authenticate"
+            className={`navButton ${
+              location.pathname === "/authenticate" ? "active" : ""
+            }`}
+          >
+            Sign In
           </Link>
         </div>
       )}

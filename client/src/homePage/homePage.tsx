@@ -1,17 +1,11 @@
+import TitleHeader from "../Shared/titleHeader";
 import creator from "../assets/creator.png";
 import homevideo from "../assets/home.mov";
 import Entry from "./entry";
 const HomePage = () => {
   return (
     <div className="row">
-      <div className="row">
-        <h1
-          className="text-center mt-3 mb-4 col-12"
-          style={{ fontWeight: "bold" }}
-        >
-          🏋️‍♂️MOOSCLES🏋️‍♀️
-        </h1>
-      </div>
+      <TitleHeader title=" 🏋️‍♂️MOOSCLES🏋️‍♀️"></TitleHeader>
       <Entry
         header="🤝 Meet Mooscles"
         text={[

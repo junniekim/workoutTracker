@@ -1,4 +1,6 @@
+import TitleHeader from "../Shared/titleHeader";
+
 const WorkoutLogPage = () => {
-  return <div>workout log</div>;
+  return <TitleHeader title="💪My Workout"></TitleHeader>;
 };
 export default WorkoutLogPage;

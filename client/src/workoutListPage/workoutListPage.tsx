@@ -1,4 +1,6 @@
+import TitleHeader from "../Shared/titleHeader";
+
 const WorkoutListPage = () => {
-  return <div>workout list</div>;
+  return <TitleHeader title="✏️Workout Customization"></TitleHeader>;
 };
 export default WorkoutListPage;

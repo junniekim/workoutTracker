@@ -3,7 +3,7 @@ import git from "../assets/git.png";
 import linkedin from "../assets/linkedIn.png";
 const Footer: React.FC = () => {
   return (
-    <div className="row footer">
+    <div className="row footer mt-4">
       <hr></hr>
       <div className="col-6 text-right">
         <h1>Mooscles</h1>

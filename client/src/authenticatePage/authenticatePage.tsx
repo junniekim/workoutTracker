@@ -1,4 +1,6 @@
+import TitleHeader from "../Shared/titleHeader";
+
 const AuthenticatePage = () => {
-  return <div>Authenticatge</div>;
+  return <TitleHeader title="Sign In"></TitleHeader>;
 };
 export default AuthenticatePage;
