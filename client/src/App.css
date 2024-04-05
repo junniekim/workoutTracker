@@ -49,3 +49,14 @@
 .align-text-center {
   align-items: center;
 }
+.grey {
+  color: grey;
+}
+.text-button {
+  background: none;
+  border: none;
+  color: black;
+}
+.text-button:hover {
+  color: blue;
+}

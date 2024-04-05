@@ -1,12 +1,19 @@
-import TitleHeader from "../Shared/titleHeader";
+import { useState } from "react";
 import SignIn from "./signin";
 import SignUp from "./signup";
+
 const AuthenticatePage = () => {
+  const [login, setlogin] = useState(true);
+  const handleLogInToggle = () => {
+    setlogin(!login);
+  };
   return (
     <div>
-      <TitleHeader title="Sign In"></TitleHeader>
-      <SignIn />
-      <SignUp />
+      {login ? (
+        <SignIn onToggle={handleLogInToggle} />
+      ) : (
+        <SignUp onToggle={handleLogInToggle} />
+      )}
     </div>
   );
 };

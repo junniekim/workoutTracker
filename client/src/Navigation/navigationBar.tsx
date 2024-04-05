@@ -22,7 +22,9 @@ const NavigationBar: React.FC = () => {
   return (
     <div className="navigation row">
       <div className="navHeader row col-12 col-md-6">
-        <h2 className="header col-6">🔥Mooscles</h2>
+        <h2 className="header col-6" style={{ textWrap: "nowrap" }}>
+          🔥Mooscles
+        </h2>
         <div className="col-6">
           <button
             className="hamburger"
@@ -71,7 +73,7 @@ const NavigationBar: React.FC = () => {
             location.pathname === "/workoutlist" ? "active" : ""
           }`}
         >
-          Customization
+          Custom
         </Link>
         <Link
           to="/authenticate"
@@ -120,7 +122,7 @@ const NavigationBar: React.FC = () => {
               location.pathname === "/workoutlist" ? "active" : ""
             }`}
           >
-            Customization
+            Custom
           </Link>
           <Link
             to="/authenticate"
