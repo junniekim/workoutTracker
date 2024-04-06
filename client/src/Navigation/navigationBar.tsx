@@ -89,6 +89,9 @@ const NavigationBar: React.FC = () => {
           <Link
             to="/"
             className={`navButton ${location.pathname === "/" ? "active" : ""}`}
+            onClick={() => {
+              setIsOpen(false);
+            }}
           >
             Home
           </Link>
@@ -97,6 +100,9 @@ const NavigationBar: React.FC = () => {
             className={`navButton ${
               location.pathname === "/workoutlog" ? "active" : ""
             }`}
+            onClick={() => {
+              setIsOpen(false);
+            }}
           >
             Tracker
           </Link>
@@ -105,6 +111,9 @@ const NavigationBar: React.FC = () => {
             className={`navButton ${
               location.pathname === "/progress" ? "active" : ""
             }`}
+            onClick={() => {
+              setIsOpen(false);
+            }}
           >
             Progress
           </Link>
@@ -113,6 +122,9 @@ const NavigationBar: React.FC = () => {
             className={`navButton ${
               location.pathname === "/profile" ? "active" : ""
             }`}
+            onClick={() => {
+              setIsOpen(false);
+            }}
           >
             Profile
           </Link>
@@ -121,6 +133,9 @@ const NavigationBar: React.FC = () => {
             className={`navButton ${
               location.pathname === "/workoutlist" ? "active" : ""
             }`}
+            onClick={() => {
+              setIsOpen(false);
+            }}
           >
             Custom
           </Link>
@@ -129,6 +144,9 @@ const NavigationBar: React.FC = () => {
             className={`navButton ${
               location.pathname === "/authenticate" ? "active" : ""
             }`}
+            onClick={() => {
+              setIsOpen(false);
+            }}
           >
             Sign In
           </Link>

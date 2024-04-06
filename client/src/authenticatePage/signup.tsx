@@ -100,7 +100,7 @@ const SignUp = (props: any) => {
             <div>
               <small>
                 <button className="text-button" onClick={props.onToggle}>
-                  I actually have an account
+                  Already have an account?
                 </button>
               </small>
             </div>
