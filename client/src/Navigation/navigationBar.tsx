@@ -73,7 +73,7 @@ const NavigationBar: React.FC = () => {
             location.pathname === "/workoutlist" ? "active" : ""
           }`}
         >
-          Custom
+          List
         </Link>
         <Link
           to="/authenticate"
@@ -137,7 +137,7 @@ const NavigationBar: React.FC = () => {
               setIsOpen(false);
             }}
           >
-            Custom
+            List
           </Link>
           <Link
             to="/authenticate"
