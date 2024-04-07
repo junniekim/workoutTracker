@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./signup.css";
+import "./sharedAuthenticate.css";
 import TitleHeader from "../Shared/titleHeader";
 import UserInformation from "./userInformation";
 

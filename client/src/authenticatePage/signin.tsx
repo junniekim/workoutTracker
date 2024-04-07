@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./signup.css";
+import "./sharedAuthenticate.css";
 import TitleHeader from "../Shared/titleHeader";
 const SignIn = (props: any) => {
   const [biggerForm, setBiggerForm] = useState(window.innerWidth > 700);

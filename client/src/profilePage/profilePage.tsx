@@ -4,7 +4,6 @@ import { useState } from "react";
 import UserInformation from "../authenticatePage/userInformation";
 const ProfilePage = () => {
   const [mode, setMode] = useState("view");
-  console.log("mode", mode);
   return (
     <div className="row">
       <TitleHeader title="🌟My Profile"></TitleHeader>

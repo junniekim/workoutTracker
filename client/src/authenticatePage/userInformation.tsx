@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./signup.css";
+import "./sharedAuthenticate.css";
 
 const UserInformation = ({ header }: { header?: string }) => {
   const [firstName, setFirstName] = useState("");
