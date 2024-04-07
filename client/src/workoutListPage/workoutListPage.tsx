@@ -3,10 +3,11 @@ import Dropdown from "react-dropdown";
 import noImage from "../assets/noImage.png";
 import "react-dropdown/style.css";
 import Workout from "./workout";
-// import { useState } from "react";
+import { useState } from "react";
 const WorkoutListPage = () => {
   const options = ["Upperbody", "Chest", "Upper Chest", "Cardio"];
-  // const [adding, setAdding] = useState(false);
+  const [adding, setAdding] = useState(false);
+  const [editing, setEditing] = useState(false);
   return (
     <div>
       <TitleHeader title="✏️My List"></TitleHeader>
@@ -34,50 +35,29 @@ const WorkoutListPage = () => {
           value={options[0]}
           placeholder="Select an option"
         ></Dropdown>
-        <h2 className="mt-2 mb-2 col-auto">»</h2>
-        <Dropdown
-          className=" mt-2 mb-2 col-12 col-md-3 col-lg-2" // need to be bigger on bigger screen
-          options={options}
-          value={options[1]}
-          placeholder="Select an option"
-        ></Dropdown>
-        <h2 className="mt-2 mb-2 col-auto">»</h2>
-        <Dropdown
-          className="mt-2 mb-2  col-12 col-md-3 col-lg-2" // need to be bigger on bigger screen
-          options={options}
-          value={options[2]}
-          placeholder="Select an option"
-        ></Dropdown>
 
-        <h2 className="mt-2 mb-2 col-auto">»</h2>
-        <Dropdown
-          className="mt-2 mb-2 col-12 col-md-3 col-lg-2" // need to be bigger on bigger screen
-          options={options}
-          value={options[2]}
-          placeholder="Select an option"
-        ></Dropdown>
-
-        {/* {adding ? (
+        {adding ? (
           <div
             className="col-12 row mt-2 justify-content-center"
             style={{ gap: "10px" }}
           >
             <div className="col-12 d-flex justify-content-center">
               <form>
-                <div className="form-group mb-2">
+                <div className="form-group ">
                   <input
-                    type="email"
+                    type="text"
                     placeholder="Workout Name"
                     className="form-control"
-                    id="email"
+                    id="title"
                   />
                 </div>
               </form>
             </div>
-
-            <button className="btn btn-outline-secondary col-4 col-sm-4 col-md-3 col-lg-2">
-              Update my profile picture
-            </button>
+            <div className="col-12 d-flex mb-1 justify-content-center">
+              <button className="text-button btn btn-outline-secondary">
+                Upload Image
+              </button>
+            </div>
 
             <button
               onClick={() => {
@@ -102,17 +82,59 @@ const WorkoutListPage = () => {
               onClick={() => {
                 setAdding(true);
               }}
-              className="btn btn-primary col-4 col-sm-4 col-md-3 col-lg-2"
+              className="btn btn-outline-primary col-4 col-sm-4 col-md-3 col-lg-2"
             >
               Add Workout
             </button>
           </div>
-        )} */}
+        )}
       </div>
+      <div className="mt-3 row d-flex">
+        <div className="col-12 col-md-6  d-flex justify-content-center">
+          {editing ? (
+            <div className=" d-flex " style={{ gap: "10px" }}>
+              <button
+                className="btn btn-success"
+                onClick={() => {
+                  setEditing(!editing);
+                }}
+              >
+                Save Changes
+              </button>
+              <button
+                className="btn btn-danger"
+                onClick={() => {
+                  setEditing(!editing);
+                }}
+              >
+                Discard
+              </button>
+            </div>
+          ) : (
+            <button
+              className="btn btn-outline-primary"
+              onClick={() => {
+                setEditing(!editing);
+              }}
+            >
+              Edit Workout
+            </button>
+          )}
+        </div>
 
+        <div
+          className="mt-1 col-12 col-md-6 d-flex justify-content-center"
+          style={{ gap: "10px" }}
+        >
+          <input type="checkbox" id="customOnly" />
+          <h5 style={{ marginTop: "0.5rem" }}>Only Show Custom Workouts</h5>
+        </div>
+      </div>
       <div className="mt-4 row d-flex flex-row">
         <Workout
           description="Lower Back"
+          custom={true}
+          editing={editing}
           image={noImage}
           title="Lat Pull Down"
         ></Workout>
@@ -123,22 +145,7 @@ const WorkoutListPage = () => {
         ></Workout>
         <Workout
           description="Lower Back"
-          image="https://github.com/chaosbastler/opentraining-exercises/blob/master/Biceps-curl-reverse-1.png?raw=true"
-          title="Lat Pull Down"
-        ></Workout>
-        <Workout
-          description="Lower Back"
           image="https://github.com/chaosbastler/opentraining-exercises/blob/master/Cross-body-crunch-1.png?raw=true"
-          title="Lat Pull Down"
-        ></Workout>
-        <Workout
-          description="Lower Back"
-          image="https://github.com/chaosbastler/opentraining-exercises/blob/master/Dumbbell-decline-flys-2.png?raw=true"
-          title="Lat Pull Down"
-        ></Workout>
-        <Workout
-          description="Lower Back"
-          image="https://github.com/chaosbastler/opentraining-exercises/blob/master/Biceps-curl-reverse-1.png?raw=true"
           title="Lat Pull Down"
         ></Workout>
       </div>
