@@ -8,18 +8,37 @@ import "./progressPage.css";
 
 export const bodyWeightData = [
   ["Months", "Body Weight"],
-  ["Jan", 300],
-  ["Feb", 150],
-  ["Mar", 200],
-  ["Apr", 300],
-  ["May", 150],
-  ["Jun", 200],
-  ["Jul", 300],
-  ["Aug", 150],
-  ["Sep", 200],
-  ["Oct", 300],
-  ["Nov", 150],
-  ["Dec", 200],
+  ["1", 300],
+  ["2", 150],
+  ["3", 200],
+  ["4", 300],
+  ["5", 150],
+  ["6", 200],
+  ["7", 300],
+  ["8", 150],
+  ["9", 200],
+  ["10", 300],
+  ["11", 150],
+  ["12", 200],
+  ["13", 150],
+  ["14", 200],
+  ["15", 150],
+  ["16", 200],
+  ["17", 150],
+  ["18", 200],
+  ["19", 150],
+  ["20", 200],
+  ["21", 150],
+  ["22", 200],
+  ["23", 150],
+  ["24", 200],
+  ["25", 150],
+  ["26", 200],
+  ["27", 150],
+  ["28", 200],
+  ["29", 150],
+  ["30", 200],
+  ["31", 150],
 ];
 
 export const bodyWeightOptions = {
@@ -32,23 +51,45 @@ export const bodyWeightOptions = {
   titleTextStyle: {
     fontSize: 18,
   },
+  hAxis: {
+    title: "Day",
+  },
   pointSize: 5,
 };
 
 export const maxWeightData = [
   ["Months", "Body Weight"],
-  ["Jan", 300],
-  ["Feb", 150],
-  ["Mar", 200],
-  ["Apr", 300],
-  ["May", 150],
-  ["Jun", 200],
-  ["Jul", 300],
-  ["Aug", 150],
-  ["Sep", 200],
-  ["Oct", 300],
-  ["Nov", 150],
-  ["Dec", 200],
+  ["1", 300],
+  ["2", 150],
+  ["3", 200],
+  ["4", 300],
+  ["5", 150],
+  ["6", 200],
+  ["7", 300],
+  ["8", 150],
+  ["9", 200],
+  ["10", 300],
+  ["11", 150],
+  ["12", 200],
+  ["13", 150],
+  ["14", 200],
+  ["15", 150],
+  ["16", 200],
+  ["17", 150],
+  ["18", 200],
+  ["19", 150],
+  ["20", 200],
+  ["21", 150],
+  ["22", 200],
+  ["23", 150],
+  ["24", 200],
+  ["25", 150],
+  ["26", 200],
+  ["27", 150],
+  ["28", 200],
+  ["29", 150],
+  ["30", 200],
+  ["31", 150],
 ];
 
 export const maxWeightOptions = {
@@ -58,6 +99,9 @@ export const maxWeightOptions = {
   vAxis: {
     title: "Weight Lifted (Ibs)",
   },
+  hAxis: {
+    title: "Day",
+  },
   titleTextStyle: {
     fontSize: 18,
   },
@@ -66,16 +110,13 @@ export const maxWeightOptions = {
 };
 
 const ProgressPage = () => {
-  const dateFormatter = (date: any) => {
-    return `${date.getFullYear()}-${(date.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
-  };
   const [selectedDate, setSelectedDate] = useState<String>(
-    dateFormatter(new Date())
+    new Date().toLocaleString("en-US", { month: "long", year: "numeric" })
   );
   const onChange = (date: any) => {
-    setSelectedDate(dateFormatter(date));
+    setSelectedDate(
+      date.toLocaleString("en-US", { month: "long", year: "numeric" })
+    );
   };
 
   const tileClassName = ({
@@ -97,13 +138,13 @@ const ProgressPage = () => {
       <TitleHeader title="📈My Progress"></TitleHeader>
       <div className="d-flex justify-content-center">
         <Calendar
-          maxDetail="decade"
+          maxDetail="year"
           onChange={onChange}
           maxDate={new Date()}
           tileClassName={tileClassName}
         />
       </div>
-
+      <h4 className="text-center mt-4">Your progress in {selectedDate}</h4>
       <Chart
         chartType="LineChart"
         width="100%"
@@ -120,7 +161,7 @@ const ProgressPage = () => {
         data={maxWeightData}
         options={maxWeightOptions}
       />
-      <h4>Photo Gallery</h4>
+      <h4>Photo Gallery for {selectedDate}</h4>
       <div className="image-container">
         <div className="image-wrapper">
           <img src={creator} alt="creator" />
