@@ -60,3 +60,12 @@
 .text-button:hover {
   color: blue;
 }
+
+.text-button-delete {
+  background: none;
+  border: none;
+  color: black;
+}
+.text-button-delete:hover {
+  color: red;
+}
