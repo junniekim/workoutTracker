@@ -78,14 +78,16 @@ const WorkoutListPage = () => {
           </div>
         ) : (
           <div className="col-12 row mt-2 justify-content-center">
-            <button
-              onClick={() => {
-                setAdding(true);
-              }}
-              className="btn btn-outline-primary col-4 col-sm-4 col-md-3 col-lg-2"
-            >
-              Add Workout
-            </button>
+            {editing ? (
+              <button
+                onClick={() => {
+                  setAdding(true);
+                }}
+                className="btn btn-outline-primary col-4 col-sm-4 col-md-3 col-lg-2"
+              >
+                Add Workout
+              </button>
+            ) : null}
           </div>
         )}
       </div>
