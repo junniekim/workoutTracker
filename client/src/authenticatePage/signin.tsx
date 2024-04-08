@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./sharedAuthenticate.css";
 import TitleHeader from "../Shared/titleHeader";
+import Swal from "sweetalert2";
 const SignIn = (props: any) => {
   const [biggerForm, setBiggerForm] = useState(window.innerWidth > 700);
 
@@ -12,18 +13,49 @@ const SignIn = (props: any) => {
         setBiggerForm(false);
       }
     };
-
     window.addEventListener("resize", handleResize);
-
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+  const signInHandler = () => {
+    const email = (document.getElementById("email") as HTMLInputElement)?.value;
+    const password = (document.getElementById("password") as HTMLInputElement)
+      ?.value;
+    (document.getElementById("email") as HTMLInputElement).value = "";
+    (document.getElementById("password") as HTMLInputElement).value = "";
+    const query = `http://localhost:3000/users?email=${email}&password=${password}`;
+    console.log(query);
+    fetch(query)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (!data._id) {
+          Swal.fire(
+            "No Account Found",
+            "Please check your email and password and try again.",
+            "error"
+          );
+        }
+        if (data._id) {
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
   return (
     <div className="row">
       <TitleHeader title="Sign In"></TitleHeader>
       <div className="col-12 d-flex justify-content-center">
-        <form className={biggerForm ? "third-width" : "half-width"}>
+        <form
+          className={biggerForm ? "third-width" : "half-width"}
+          onSubmit={(e) => {
+            e.preventDefault();
+            signInHandler();
+          }}
+        >
           <div className="form-group mb-2">
             <input
               type="email"
