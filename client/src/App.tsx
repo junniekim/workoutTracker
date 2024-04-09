@@ -10,18 +10,31 @@ import WorkoutListPage from "./workoutListPage/workoutListPage";
 import WorkoutLogPage from "./workoutLogPage/workoutLogPage";
 import NavigationBar from "./navigation/navigationBar";
 import Footer from "./footer/footer";
+import { useUser } from "./SesssionManager/session";
 function App() {
+  const { userData } = useUser();
   return (
     <Router>
       <div className="container">
         <NavigationBar />
         <Routes>
+          {userData ? (
+            <>
+              <Route path="/workoutlist" Component={WorkoutListPage} />
+              <Route path="/workoutlog" Component={WorkoutLogPage} />
+              <Route path="/profile" Component={ProfilePage} />
+              <Route path="/progress" Component={ProgressPage} />
+            </>
+          ) : (
+            <>
+              <Route path="/workoutlist" Component={AuthenticatePage} />
+              <Route path="/workoutlog" Component={AuthenticatePage} />
+              <Route path="/profile" Component={AuthenticatePage} />
+              <Route path="/progress" Component={AuthenticatePage} />
+            </>
+          )}
           <Route path="/" Component={HomePage} />
           <Route path="/authenticate" Component={AuthenticatePage} />
-          <Route path="/profile" Component={ProfilePage} />
-          <Route path="/progress" Component={ProgressPage} />
-          <Route path="/workoutlist" Component={WorkoutListPage} />
-          <Route path="/workoutlog" Component={WorkoutLogPage} />
         </Routes>
         <Footer />
       </div>

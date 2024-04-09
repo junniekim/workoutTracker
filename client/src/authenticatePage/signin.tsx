@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import "./sharedAuthenticate.css";
 import TitleHeader from "../Shared/titleHeader";
 import Swal from "sweetalert2";
+import { useUser } from "../SesssionManager/session";
 const SignIn = (props: any) => {
+  // Screen Responsiveness
   const [biggerForm, setBiggerForm] = useState(window.innerWidth > 700);
-
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 700) {
@@ -18,6 +19,10 @@ const SignIn = (props: any) => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  const { setUser } = useUser();
+
+  //When user try to sign in, see if the user exists, if so, store their data in context
   const signInHandler = () => {
     const email = (document.getElementById("email") as HTMLInputElement)?.value;
     const password = (document.getElementById("password") as HTMLInputElement)
@@ -25,7 +30,6 @@ const SignIn = (props: any) => {
     (document.getElementById("email") as HTMLInputElement).value = "";
     (document.getElementById("password") as HTMLInputElement).value = "";
     const query = `http://localhost:3000/users?email=${email}&password=${password}`;
-    console.log(query);
     fetch(query)
       .then((response) => {
         return response.json();
@@ -39,12 +43,15 @@ const SignIn = (props: any) => {
           );
         }
         if (data._id) {
+          setUser(data);
+          Swal.fire("Success", "You have successfully signed in", "success");
         }
       })
       .catch((error) => {
         console.error(error);
       });
   };
+
   return (
     <div className="row">
       <TitleHeader title="Sign In"></TitleHeader>

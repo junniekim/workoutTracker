@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./navigationBar.css";
+import { useUser } from "../SesssionManager/session";
 const NavigationBar: React.FC = () => {
+  const { userData, clearUser } = useUser();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
@@ -42,47 +44,65 @@ const NavigationBar: React.FC = () => {
         >
           Home
         </Link>
-        <Link
-          to="/workoutlog"
-          className={`navButton ${
-            location.pathname === "/workoutlog" ? "active" : ""
-          }`}
-        >
-          Tracker
-        </Link>
-        <Link
-          to="/progress"
-          className={`navButton ${
-            location.pathname === "/progress" ? "active" : ""
-          }`}
-        >
-          Progress
-        </Link>
-        <Link
-          to="/profile"
-          className={`navButton ${
-            location.pathname === "/profile" ? "active" : ""
-          }`}
-        >
-          Profile
-        </Link>
+        {userData?._id ? (
+          <>
+            <Link
+              to="/workoutlog"
+              className={`navButton ${
+                location.pathname === "/workoutlog" ? "active" : ""
+              }`}
+            >
+              Tracker
+            </Link>
+            <Link
+              to="/progress"
+              className={`navButton ${
+                location.pathname === "/progress" ? "active" : ""
+              }`}
+            >
+              Progress
+            </Link>
+            <Link
+              to="/profile"
+              className={`navButton ${
+                location.pathname === "/profile" ? "active" : ""
+              }`}
+            >
+              Profile
+            </Link>
 
-        <Link
-          to="/workoutlist"
-          className={`navButton ${
-            location.pathname === "/workoutlist" ? "active" : ""
-          }`}
-        >
-          List
-        </Link>
-        <Link
-          to="/authenticate"
-          className={`navButton ${
-            location.pathname === "/authenticate" ? "active" : ""
-          }`}
-        >
-          Sign In
-        </Link>
+            <Link
+              to="/workoutlist"
+              className={`navButton ${
+                location.pathname === "/workoutlist" ? "active" : ""
+              }`}
+            >
+              List
+            </Link>
+            <Link to="/" className="navButton">
+              <button
+                className="navButton"
+                style={{
+                  marginTop: "-1px",
+                  background: "transparent",
+                  border: "none",
+                }}
+                onClick={() => clearUser()}
+              >
+                Sign out
+              </button>
+            </Link>
+          </>
+        ) : (
+          <Link
+            to="/authenticate"
+            className={`navButton ${
+              location.pathname === "/authenticate" ? "active" : ""
+            }`}
+          >
+            Sign In
+          </Link>
+        )}
       </div>
       {isOpen && (
         <div className="collapsed-menu col-12 text-center">
@@ -95,61 +115,78 @@ const NavigationBar: React.FC = () => {
           >
             Home
           </Link>
-          <Link
-            to="/workoutlog"
-            className={`navButton ${
-              location.pathname === "/workoutlog" ? "active" : ""
-            }`}
-            onClick={() => {
-              setIsOpen(false);
-            }}
-          >
-            Tracker
-          </Link>
-          <Link
-            to="/progress"
-            className={`navButton ${
-              location.pathname === "/progress" ? "active" : ""
-            }`}
-            onClick={() => {
-              setIsOpen(false);
-            }}
-          >
-            Progress
-          </Link>
-          <Link
-            to="/profile"
-            className={`navButton ${
-              location.pathname === "/profile" ? "active" : ""
-            }`}
-            onClick={() => {
-              setIsOpen(false);
-            }}
-          >
-            Profile
-          </Link>
-          <Link
-            to="/workoutlist"
-            className={`navButton ${
-              location.pathname === "/workoutlist" ? "active" : ""
-            }`}
-            onClick={() => {
-              setIsOpen(false);
-            }}
-          >
-            List
-          </Link>
-          <Link
-            to="/authenticate"
-            className={`navButton ${
-              location.pathname === "/authenticate" ? "active" : ""
-            }`}
-            onClick={() => {
-              setIsOpen(false);
-            }}
-          >
-            Sign In
-          </Link>
+          {userData?._id ? (
+            <>
+              <Link
+                to="/workoutlog"
+                className={`navButton ${
+                  location.pathname === "/workoutlog" ? "active" : ""
+                }`}
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                Tracker
+              </Link>
+              <Link
+                to="/progress"
+                className={`navButton ${
+                  location.pathname === "/progress" ? "active" : ""
+                }`}
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                Progress
+              </Link>
+              <Link
+                to="/profile"
+                className={`navButton ${
+                  location.pathname === "/profile" ? "active" : ""
+                }`}
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                Profile
+              </Link>
+              <Link
+                to="/workoutlist"
+                className={`navButton ${
+                  location.pathname === "/workoutlist" ? "active" : ""
+                }`}
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                List
+              </Link>
+              <Link to="/" className="navButton">
+                <button
+                  className="navButton"
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                  }}
+                  onClick={() => clearUser()}
+                >
+                  Sign out
+                </button>
+              </Link>
+            </>
+          ) : (
+            <Link
+              to="/authenticate"
+              className={`navButton ${
+                location.pathname === "/authenticate" ? "active" : ""
+              }`}
+              onClick={() => {
+                setIsOpen(false);
+              }}
+            >
+              Sign In
+            </Link>
+          )}
         </div>
       )}
     </div>
