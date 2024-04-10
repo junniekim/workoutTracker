@@ -1,16 +1,14 @@
-import { useState } from "react";
 import "./sharedAuthenticate.css";
-
-const UserInformation = ({ header }: { header?: string }) => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [birthday, setBirthday] = useState("");
-  const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [bodyWeight, setBodyWeight] = useState(0);
-
+import { UserData } from "../SesssionManager/session";
+const UserInformation = ({
+  header,
+  data,
+  dataChange,
+}: {
+  header?: string;
+  data: UserData | null;
+  dataChange: (data: any) => void;
+}) => {
   return (
     <>
       <h5 className="text-center grey mb-4">{header}</h5>
@@ -24,8 +22,13 @@ const UserInformation = ({ header }: { header?: string }) => {
           type="text"
           className="form-control"
           id="firstName"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
+          value={data?.first_name}
+          onChange={(e) =>
+            dataChange((prevState: any) => ({
+              ...prevState,
+              first_name: e.target.value,
+            }))
+          }
         />
       </div>
       <div className="form-group mb-2">
@@ -38,8 +41,13 @@ const UserInformation = ({ header }: { header?: string }) => {
           type="text"
           className="form-control"
           id="lastName"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
+          value={data?.last_name}
+          onChange={(e) =>
+            dataChange((prevState: any) => ({
+              ...prevState,
+              last_name: e.target.value,
+            }))
+          }
         />
       </div>
       <div className="form-group mb-2">
@@ -52,8 +60,13 @@ const UserInformation = ({ header }: { header?: string }) => {
           type="date"
           className="form-control"
           id="birthday"
-          value={birthday}
-          onChange={(e) => setBirthday(e.target.value)}
+          value={data?.birthday.toString().substring(0, 10)}
+          onChange={(e) =>
+            dataChange((prevState: any) => ({
+              ...prevState,
+              birthday: e.target.value,
+            }))
+          }
         />
       </div>
       <div className="form-group mb-2">
@@ -66,8 +79,13 @@ const UserInformation = ({ header }: { header?: string }) => {
           type="email"
           className="form-control"
           id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={data?.email_address}
+          onChange={(e) =>
+            dataChange((prevState: any) => ({
+              ...prevState,
+              email_address: e.target.value,
+            }))
+          }
         />
       </div>
       <div className="form-group mb-2">
@@ -76,8 +94,13 @@ const UserInformation = ({ header }: { header?: string }) => {
           type="text"
           className="form-control"
           id="phone"
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
+          value={data?.phone_number}
+          onChange={(e) =>
+            dataChange((prevState: any) => ({
+              ...prevState,
+              phone_number: e.target.value,
+            }))
+          }
         />
       </div>
       <div className="form-group mb-2">
@@ -90,36 +113,12 @@ const UserInformation = ({ header }: { header?: string }) => {
           type="password"
           className="form-control"
           id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-      <div className="form-group mb-2">
-        <label>
-          <div className="input-header">
-            Password Confirm <span style={{ color: "red" }}>*</span>
-          </div>
-        </label>
-        <input
-          type="password"
-          className="form-control"
-          id="passwordConfirmation"
-          value={passwordConfirmation}
-          onChange={(e) => setPasswordConfirmation(e.target.value)}
-        />
-      </div>
-      <div className="form-group mb-2">
-        <label>
-          <div className="input-header">
-            Body Weight (kg)<span style={{ color: "red" }}>*</span>
-          </div>
-        </label>
-        <input
-          type="number"
-          className="form-control"
-          id="bodyWeight"
-          value={bodyWeight}
-          onChange={(e) => setBodyWeight(Number(e.target.value))}
+          onChange={(e) =>
+            dataChange((prevState: any) => ({
+              ...prevState,
+              password: e.target.value,
+            }))
+          }
         />
       </div>
     </>

@@ -1,32 +1,32 @@
 import React, { createContext, useContext, useState } from "react";
 
-interface UserData {
-  _id: String;
-  birthday: String;
-  customWorkout: String[];
+export interface UserData {
+  _id: string;
+  birthday: string;
+  customWorkout: string[];
   bodyweight_history: {
-    date: String;
+    date: string;
     weight: number;
   }[];
-  dateentered: String;
-  email_address: String;
-  first_name: String;
-  last_name: String;
-  password: String;
-  phone_number: String;
-  profile_picture: String;
+  dateentered: string;
+  email_address: string;
+  first_name: string;
+  last_name: string;
+  password: string;
+  phone_number: string;
+  profile_picture: string;
   workoutHistory: [
     {
-      date: String;
-      daily_picture: String;
-      journal: String;
+      date: string;
+      daily_picture: string;
+      journal: string;
       rate: number;
       workout_list: {
-        note: String;
+        note: string;
         rep: number;
         set: number;
         weight: number;
-        workout: String;
+        workout: string;
       }[];
     }
   ];
