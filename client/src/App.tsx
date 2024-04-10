@@ -27,10 +27,10 @@ function App() {
             </>
           ) : (
             <>
-              <Route path="/workoutlist" Component={AuthenticatePage} />
-              <Route path="/workoutlog" Component={AuthenticatePage} />
-              <Route path="/profile" Component={AuthenticatePage} />
-              <Route path="/progress" Component={AuthenticatePage} />
+              <Route path="/workoutlist" Component={HomePage} />
+              <Route path="/workoutlog" Component={HomePage} />
+              <Route path="/profile" Component={HomePage} />
+              <Route path="/progress" Component={HomePage} />
             </>
           )}
           <Route path="/" Component={HomePage} />

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./sharedAuthenticate.css";
+import { useNavigate } from "react-router-dom";
 import TitleHeader from "../Shared/titleHeader";
 import Swal from "sweetalert2";
 import { useUser } from "../SesssionManager/session";
@@ -21,6 +22,7 @@ const SignIn = (props: any) => {
   }, []);
 
   const { setUser } = useUser();
+  const navigate = useNavigate();
 
   //When user try to sign in, see if the user exists, if so, store their data in context
   const signInHandler = () => {
@@ -44,7 +46,13 @@ const SignIn = (props: any) => {
         }
         if (data._id) {
           setUser(data);
-          Swal.fire("Success", "You have successfully signed in", "success");
+          Swal.fire(
+            "Success",
+            "You have successfully signed in",
+            "success"
+          ).then(() => {
+            navigate("/");
+          });
         }
       })
       .catch((error) => {
