@@ -94,7 +94,10 @@ const ProfilePage = () => {
           </h2>
           <h5>✉️ {userData?.email_address}</h5>
           <h5>☎️ {userData?.phone_number}</h5>
-          <h5>🏃‍♂️ {getMostRecentWeight()} lbs</h5>
+          {userData?.bodyweight_history &&
+            userData?.bodyweight_history.length > 0 && (
+              <h5>🏃‍♂️ {getMostRecentWeight()} lbs</h5>
+            )}
         </div>
       ) : (
         <div className="col-12 col-md-6 d-flex flex-column justify-content-center ">

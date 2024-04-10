@@ -6,8 +6,8 @@ const UserInformation = ({
   dataChange,
 }: {
   header?: string;
-  data: UserData | null;
-  dataChange: (data: any) => void;
+  data?: UserData | null;
+  dataChange?: (data: any) => void;
 }) => {
   return (
     <>
@@ -22,8 +22,9 @@ const UserInformation = ({
           type="text"
           className="form-control"
           id="firstName"
-          value={data?.first_name}
+          value={data?.first_name || ""}
           onChange={(e) =>
+            dataChange &&
             dataChange((prevState: any) => ({
               ...prevState,
               first_name: e.target.value,
@@ -41,8 +42,9 @@ const UserInformation = ({
           type="text"
           className="form-control"
           id="lastName"
-          value={data?.last_name}
+          value={data?.last_name || ""}
           onChange={(e) =>
+            dataChange &&
             dataChange((prevState: any) => ({
               ...prevState,
               last_name: e.target.value,
@@ -60,8 +62,9 @@ const UserInformation = ({
           type="date"
           className="form-control"
           id="birthday"
-          value={data?.birthday.toString().substring(0, 10)}
+          value={data?.birthday?.toString().substring(0, 10) || ""}
           onChange={(e) =>
+            dataChange &&
             dataChange((prevState: any) => ({
               ...prevState,
               birthday: e.target.value,
@@ -79,8 +82,9 @@ const UserInformation = ({
           type="email"
           className="form-control"
           id="email"
-          value={data?.email_address}
+          value={data?.email_address || ""}
           onChange={(e) =>
+            dataChange &&
             dataChange((prevState: any) => ({
               ...prevState,
               email_address: e.target.value,
@@ -94,8 +98,9 @@ const UserInformation = ({
           type="text"
           className="form-control"
           id="phone"
-          value={data?.phone_number}
+          value={data?.phone_number || ""}
           onChange={(e) =>
+            dataChange &&
             dataChange((prevState: any) => ({
               ...prevState,
               phone_number: e.target.value,
@@ -114,6 +119,7 @@ const UserInformation = ({
           className="form-control"
           id="password"
           onChange={(e) =>
+            dataChange &&
             dataChange((prevState: any) => ({
               ...prevState,
               password: e.target.value,
