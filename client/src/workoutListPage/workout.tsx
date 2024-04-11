@@ -1,11 +1,12 @@
 import React from "react";
-
+import Select from "react-select";
 type WorkoutProps = {
   image: string;
   description: string;
   title: string;
   custom?: boolean;
   editing?: boolean;
+  validTarget?: any[];
 };
 
 const Workout: React.FC<WorkoutProps> = ({
@@ -14,6 +15,7 @@ const Workout: React.FC<WorkoutProps> = ({
   title,
   custom,
   editing,
+  validTarget,
 }) => {
   return (
     <div className="col-12 col-sm-6 col-md-4 col-lg-3">
@@ -33,12 +35,7 @@ const Workout: React.FC<WorkoutProps> = ({
                 <h4>X</h4>
               </button>
               <div className="form-group mb-2" style={{ margin: "0 10px" }}>
-                <input
-                  type="text"
-                  placeholder="Workout Title"
-                  className="form-control"
-                  id="editTitle"
-                />
+                <input type="text" className="form-control" id="editTitle" />
               </div>
             </div>
             <button style={{ background: "transparent", border: "none" }}>
@@ -50,12 +47,7 @@ const Workout: React.FC<WorkoutProps> = ({
               />
             </button>
             <div className="form-group mb-2 mt-2" style={{ margin: "0 10px" }}>
-              <input
-                type="text"
-                placeholder="Target Dropdown"
-                className="form-control"
-                id="editTarget"
-              />
+              <Select options={validTarget} />
             </div>
           </div>
         ) : (

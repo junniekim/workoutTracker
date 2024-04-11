@@ -4,9 +4,81 @@ import noImage from "../assets/noImage.png";
 import "react-dropdown/style.css";
 import Workout from "./workout";
 import { useState } from "react";
+import { useUser } from "../SesssionManager/session";
+import Select from "react-select";
 const WorkoutListPage = () => {
+  const { userData } = useUser();
+  const [validTarget, setValidTarget] = useState<any[]>([]);
+  const [currentTarget, setCurrentTarget] = useState([]);
+
+  const [workoutList, setWorkoutList] = useState<
+    Array<{
+      dateentered: string;
+      workout_name: string;
+      workout_picture: string;
+      custom: boolean;
+      target: string[];
+    }>
+  >([]);
+  const [customWorkoutList, setCustomWorkoutList] = useState<
+    Array<{
+      dateentered: string;
+      workout_name: string;
+      workout_picture: string;
+      custom: boolean;
+      target: string[];
+    }>
+  >([]);
+  const query = `http://localhost:3000/workout`;
+  if (workoutList.length === 0) {
+    fetch(query)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        let distinctWorkouts = data.filter(
+          (workout: any, index: number, array: any[]) => {
+            return !array
+              .slice(0, index)
+              .some(
+                (prevWorkout: any) =>
+                  prevWorkout.target.join() === workout.target.join()
+              );
+          }
+        );
+        let distinctWorkoutTargets = distinctWorkouts.map((workout: any) => {
+          return {
+            value: workout.target[workout.target.length - 1],
+            label: workout.target[workout.target.length - 1],
+          };
+        });
+        setValidTarget(distinctWorkoutTargets);
+        let filteredWorkouts = data.filter(
+          (workout: any) => workout.custom === false
+        );
+        setWorkoutList(filteredWorkouts);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  const customQuery = `http://localhost:3000/customWorkout/${userData?._id}`;
+  if (customWorkoutList.length === 0) {
+    fetch(customQuery)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setCustomWorkoutList(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
   const options = ["Upperbody", "Chest", "Upper Chest", "Cardio"];
   const [adding, setAdding] = useState(false);
+  const [customOnly, setCustomOnly] = useState(false);
   const [editing, setEditing] = useState(false);
   return (
     <div>
@@ -85,7 +157,7 @@ const WorkoutListPage = () => {
                 }}
                 className="btn btn-outline-primary col-4 col-sm-4 col-md-3 col-lg-2"
               >
-                Add Workout
+                Add Custom Workout
               </button>
             ) : null}
           </div>
@@ -119,7 +191,7 @@ const WorkoutListPage = () => {
                 setEditing(!editing);
               }}
             >
-              Edit Workout
+              Edit Custom Workout
             </button>
           )}
         </div>
@@ -128,28 +200,41 @@ const WorkoutListPage = () => {
           className="mt-1 col-12 col-md-6 d-flex justify-content-center"
           style={{ gap: "10px" }}
         >
-          <input type="checkbox" id="customOnly" />
+          <input
+            type="checkbox"
+            id="customOnly"
+            checked={customOnly || editing}
+            disabled={editing}
+            onChange={() => setCustomOnly(!customOnly)}
+          />
           <h5 style={{ marginTop: "0.5rem" }}>Only Show Custom Workouts</h5>
         </div>
       </div>
+
       <div className="mt-4 row d-flex flex-row">
-        <Workout
-          description="Lower Back"
-          custom={true}
-          editing={editing}
-          image={noImage}
-          title="Lat Pull Down"
-        ></Workout>
-        <Workout
-          description="Lower Back"
-          image="https://github.com/chaosbastler/opentraining-exercises/blob/master/Biceps-curl-reverse-1.png?raw=true"
-          title="Lat Pull Down"
-        ></Workout>
-        <Workout
-          description="Lower Back"
-          image="https://github.com/chaosbastler/opentraining-exercises/blob/master/Cross-body-crunch-1.png?raw=true"
-          title="Lat Pull Down"
-        ></Workout>
+        {!customOnly &&
+          !editing &&
+          workoutList.map((workout: any, index: number) => (
+            <Workout
+              key={index}
+              description={workout.target[workout.target.length - 1]}
+              custom={workout.custom}
+              editing={editing}
+              image={workout.workout_picture}
+              title={workout.workout_name}
+            ></Workout>
+          ))}
+        {customWorkoutList.map((workout: any, index: number) => (
+          <Workout
+            key={index}
+            validTarget={validTarget}
+            description={workout.target[workout.target.length - 1]}
+            custom={workout.custom}
+            editing={editing}
+            image={workout.workout_picture}
+            title={workout.workout_name}
+          ></Workout>
+        ))}
       </div>
     </div>
   );
