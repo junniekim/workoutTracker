@@ -7,8 +7,9 @@ import creator from "../assets/creator.png";
 import AddWorkoutForm from "./addWorkoutForm";
 import WorkoutRecord from "./workoutRecord";
 import WorkoutJournal from "./workoutJournal";
-
+import { useUser } from "../SesssionManager/session";
 const WorkoutLogPage = () => {
+  const { userData } = useUser();
   const dateFormatter = (date: any) => {
     return `${date.getFullYear()}-${(date.getMonth() + 1)
       .toString()
@@ -17,9 +18,26 @@ const WorkoutLogPage = () => {
   const [selectedDate, setSelectedDate] = useState<String>(
     dateFormatter(new Date())
   );
+  const [currentDayWorkout, setCurrentDayWorkout] = useState<any>(null);
+  const [currentDayWeight, setCurrentDayWeight] = useState(0);
   const [editing, setEditing] = useState(false);
   const onChange = (date: any) => {
     setSelectedDate(dateFormatter(date));
+    userData?.workoutHistory.find((element: any) => {
+      let temp: string[] = [];
+      if (element.date.substring(0, 10) === dateFormatter(date)) {
+        setCurrentDayWorkout(element);
+      } else {
+        setCurrentDayWorkout(null);
+      }
+    });
+    userData?.bodyweight_history.find((element: any) => {
+      if (element.date.substring(0, 10) === dateFormatter(date)) {
+        setCurrentDayWeight(element.weight);
+      } else {
+        setCurrentDayWeight(0);
+      }
+    });
   };
   const tileClassName = ({ date }: { date: Date }): string | null => {
     const currentYear = new Date().getFullYear();
@@ -77,20 +95,23 @@ const WorkoutLogPage = () => {
               </tr>
             </thead>
             <tbody>
-              <WorkoutRecord
+              {currentDayWorkout?.workout_list?.map((workout: any) => (
+                <WorkoutRecord
+                  key={workout._id}
+                  title={workout.workout}
+                  repetition={workout.rep}
+                  weight={workout.weight}
+                  note={workout.note}
+                  actionId={workout.actionId}
+                ></WorkoutRecord>
+              ))}
+              {/* <WorkoutRecord
                 title="Lat Pull Down"
                 repetition="3x10"
                 weight="50"
                 note="Good"
                 actionId={1}
-              ></WorkoutRecord>
-              <WorkoutRecord
-                title="Lat Pull Down"
-                repetition="3x10"
-                weight="50"
-                note="Good"
-                actionId={1}
-              ></WorkoutRecord>
+              ></WorkoutRecord> */}
             </tbody>
           </table>
           {editing ? (
@@ -99,10 +120,10 @@ const WorkoutLogPage = () => {
           {/* when button clicked, render <AddWorkoutForm /> */}
         </div>
         <WorkoutJournal
-          rate="5"
-          picture={creator}
-          weight={80}
-          journal="I feel good today!"
+          rate={currentDayWorkout?.rate}
+          picture={currentDayWorkout?.daily_picture}
+          weight={currentDayWeight}
+          journal={currentDayWorkout?.journal}
           editing={editing}
         ></WorkoutJournal>
       </div>
