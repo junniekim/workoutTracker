@@ -55,7 +55,9 @@ const WorkoutJournal: React.FC<WorkoutJournalProps> = ({
       ) : (
         <div>
           <h4>Workout Journal</h4>
-          {!picture && !rate && !weight && !journal && <div>No Content</div>}
+          {!picture && !rate && !weight && !journal && (
+            <div>No Content Yet</div>
+          )}
           {picture && (
             <img
               src={picture}
@@ -65,7 +67,10 @@ const WorkoutJournal: React.FC<WorkoutJournalProps> = ({
             ></img>
           )}
           {rate && <h5>Work out was {rate}</h5>}
-          {weight && <h5>As of today, I weigh {weight} pounds</h5>}
+
+          {(weight || weight != 0) && (
+            <h5>As of today, I weigh {weight} pounds</h5>
+          )}
           {journal && <p>{journal}</p>}
         </div>
       )}
