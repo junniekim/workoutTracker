@@ -1,5 +1,5 @@
 import TitleHeader from "../Shared/titleHeader";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import UserInformation from "../authenticatePage/userInformation";
 import { useUser } from "../SesssionManager/session";
 import { UserData } from "../SesssionManager/session";
@@ -10,6 +10,7 @@ const ProfilePage = () => {
     userData
   );
   const [mode, setMode] = useState("view");
+  const [selectedFile, setSelectedFile] = useState<any>(null);
   const saveHandler = (): void => {
     if (mode === "view") {
       setMode("edit");
@@ -38,6 +39,17 @@ const ProfilePage = () => {
     }
   };
 
+  const deleteProfilePicture = (): void => {
+    console.log("delete profile picture");
+  };
+
+  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedFile(event.target.files ? event.target.files[0] : null);
+  };
+
+  const updateProfilePicture = (): void => {
+    console.log("update profile picture");
+  };
   const deleteHandler = (): void => {
     Swal.fire({
       title: "Are you sure you want to delete your account?",
@@ -115,9 +127,24 @@ const ProfilePage = () => {
           style={{ borderRadius: "50%", height: "350px", width: "350px" }}
         />
         {mode === "edit" && (
-          <div className="text-center mt-3">
-            <button className="btn btn-outline-secondary">
+          <div className="text-center mt-3 d-flex flex-column">
+            <h6></h6>
+            <input type="file" onChange={onFileChange} />
+            <button
+              onClick={() => {
+                updateProfilePicture();
+              }}
+              className="btn btn-outline-secondary mb-2"
+            >
               Update my profile picture
+            </button>
+            <button
+              onClick={() => {
+                deleteProfilePicture();
+              }}
+              className="btn btn-outline-danger"
+            >
+              Delete my profile picture
             </button>
           </div>
         )}
