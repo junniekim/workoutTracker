@@ -3,8 +3,9 @@ import { useState } from "react";
 import UserInformation from "../authenticatePage/userInformation";
 import { useUser } from "../SesssionManager/session";
 import { UserData } from "../SesssionManager/session";
+import Swal from "sweetalert2";
 const ProfilePage = () => {
-  const { userData, setUser } = useUser();
+  const { userData, setUser, clearUser } = useUser();
   const [temporaryChanges, setTemporaryChanges] = useState<UserData | null>(
     userData
   );
@@ -36,6 +37,42 @@ const ProfilePage = () => {
       setMode("view");
     }
   };
+
+  const deleteHandler = (): void => {
+    Swal.fire({
+      title: "Are you sure you want to delete your account?",
+      text: "This action is irreversible",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Sorry to see you go!",
+          text: "This account has been permanently deleted",
+          icon: "info",
+        });
+        const query2 = `http://localhost:3000/deleteUser/${userData?._id}`;
+        fetch(query2, {
+          method: "DELETE",
+        })
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            console.log(data);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+        clearUser();
+      }
+    });
+  };
+
   const discardHandler = (): void => {
     setMode("view");
     setTemporaryChanges(userData);
@@ -124,7 +161,9 @@ const ProfilePage = () => {
         <button className="btn btn-primary" onClick={() => saveHandler()}>
           {mode === "view" ? "Edit Profile" : "Save Changes"}
         </button>
-        <button className="btn btn-danger">Delete Account</button>
+        <button onClick={() => deleteHandler()} className="btn btn-danger">
+          Delete Account
+        </button>
       </div>
     </div>
   );
