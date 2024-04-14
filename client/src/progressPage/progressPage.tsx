@@ -28,10 +28,12 @@ const ProgressPage = () => {
   const [selectedDate, setSelectedDate] = useState<String>(
     new Date().toLocaleString("en-US", { month: "long", year: "numeric" })
   );
+  const [bodyImageData, setBodyImageData] = useState<any>(null);
   const [bodyWeightData, setBodyWeightData] = useState<any>(null);
 
   const onChange = (date: any) => {
-    let temp: any[] = [];
+    let bodyGraphInput: any[] = [];
+    let photoGallery: any[] = [];
     setSelectedDate(
       //03-01-2024
       date
@@ -56,7 +58,7 @@ const ProgressPage = () => {
           })
           .replace(/\//g, "-")
       ) {
-        temp.push([
+        bodyGraphInput.push([
           Number(
             new Date(element.date).toLocaleString("en-US", {
               day: "numeric",
@@ -64,17 +66,46 @@ const ProgressPage = () => {
           ) + 1,
           element.weight,
         ]);
-        temp.sort((a, b) => a[0] - b[0]);
-        temp = temp.map((subArray) => [String(subArray[0]), subArray[1]]);
+        bodyGraphInput.sort((a, b) => a[0] - b[0]);
+        bodyGraphInput = bodyGraphInput.map((subArray) => [
+          String(subArray[0]),
+          subArray[1],
+        ]);
       }
     });
-    if (temp.length === 0) {
+    if (bodyGraphInput.length === 0) {
       setBodyWeightData(null);
     } else {
-      temp.unshift(["Day", "Body Weight (Ibs)"]);
-      console.log(temp);
-      setBodyWeightData(temp);
+      bodyGraphInput.unshift(["Day", "Body Weight (Ibs)"]);
+      setBodyWeightData(bodyGraphInput);
     }
+    userData?.workoutHistory?.filter((element: any) => {
+      if (
+        new Date(element.date)
+          .toLocaleString("en-US", {
+            year: "numeric",
+            month: "2-digit",
+          })
+          .replace(/\//g, "-") ===
+        date
+          .toLocaleString("en-US", {
+            year: "numeric",
+            month: "2-digit",
+          })
+          .replace(/\//g, "-")
+      ) {
+        photoGallery.push([
+          Number(
+            new Date(element.date).toLocaleString("en-US", {
+              day: "numeric",
+            })
+          ) + 1,
+          element.daily_picture,
+        ]);
+        photoGallery.sort((a, b) => a[0] - b[0]);
+      }
+    });
+    setBodyImageData(photoGallery);
   };
 
   const tileClassName = ({
@@ -118,49 +149,21 @@ const ProgressPage = () => {
 
       <h4>Photo Gallery for {selectedDate}</h4>
       <div className="image-container">
-        <div className="image-wrapper">
-          <img src={creator} alt="creator" />
-          <p>1234-09-24</p>
-        </div>
-        <div className="image-wrapper">
-          <img src={creator} alt="creator" />
-          <p>1234-09-24</p>
-        </div>
-        <div className="image-wrapper">
-          <img src={creator} alt="creator" />
-        </div>
-        <div className="image-wrapper">
-          <img src={creator} alt="creator" />
-          <p>1234-09-24</p>
-        </div>
-        <div className="image-wrapper">
-          <img src={creator} alt="creator" />
-          <p>1234-09-24</p>
-        </div>
-        <div className="image-wrapper">
-          <img src={creator} alt="creator" />
-          <p>1234-09-24</p>
-        </div>
-        <div className="image-wrapper">
-          <img src={creator} alt="creator" />
-          <p>1234-09-24</p>
-        </div>
-        <div className="image-wrapper">
-          <img src={creator} alt="creator" />
-          <p>1234-09-24</p>
-        </div>
-        <div className="image-wrapper">
-          <img src={creator} alt="creator" />
-          <p>1234-09-24</p>
-        </div>
-        <div className="image-wrapper">
-          <img src={creator} alt="creator" />
-          <p>1234-09-24</p>
-        </div>
-        <div className="image-wrapper">
-          <img src={creator} alt="creator" />
-          <p>1234-09-24</p>
-        </div>
+        {bodyImageData != null && bodyImageData.length > 0 ? (
+          bodyImageData.map((image: any, index: number) => (
+            <div className="image-wrapper" key={index}>
+              <img src={image[1]} alt={`image-${index}`} />
+              <p>
+                {selectedDate.slice(0, 2) +
+                  "-" +
+                  image[0] +
+                  selectedDate.slice(2)}
+              </p>
+            </div>
+          ))
+        ) : (
+          <h5 className="mt-3 text-center">No Pictures Found</h5>
+        )}
       </div>
     </div>
   );
