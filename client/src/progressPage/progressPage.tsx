@@ -4,42 +4,8 @@ import Calendar from "react-calendar";
 import creator from "../assets/creator.png";
 import "react-calendar/dist/Calendar.css";
 import { Chart } from "react-google-charts";
+import { useUser } from "../SesssionManager/session";
 import "./progressPage.css";
-
-export const bodyWeightData = [
-  ["Months", "Body Weight"],
-  ["1", 300],
-  ["2", 150],
-  ["3", 200],
-  ["4", 300],
-  ["5", 150],
-  ["6", 200],
-  ["7", 300],
-  ["8", 150],
-  ["9", 200],
-  ["10", 300],
-  ["11", 150],
-  ["12", 200],
-  ["13", 150],
-  ["14", 200],
-  ["15", 150],
-  ["16", 200],
-  ["17", 150],
-  ["18", 200],
-  ["19", 150],
-  ["20", 200],
-  ["21", 150],
-  ["22", 200],
-  ["23", 150],
-  ["24", 200],
-  ["25", 150],
-  ["26", 200],
-  ["27", 150],
-  ["28", 200],
-  ["29", 150],
-  ["30", 200],
-  ["31", 150],
-];
 
 export const bodyWeightOptions = {
   title: "Body weight change",
@@ -57,66 +23,58 @@ export const bodyWeightOptions = {
   pointSize: 5,
 };
 
-export const maxWeightData = [
-  ["Months", "Body Weight"],
-  ["1", 300],
-  ["2", 150],
-  ["3", 200],
-  ["4", 300],
-  ["5", 150],
-  ["6", 200],
-  ["7", 300],
-  ["8", 150],
-  ["9", 200],
-  ["10", 300],
-  ["11", 150],
-  ["12", 200],
-  ["13", 150],
-  ["14", 200],
-  ["15", 150],
-  ["16", 200],
-  ["17", 150],
-  ["18", 200],
-  ["19", 150],
-  ["20", 200],
-  ["21", 150],
-  ["22", 200],
-  ["23", 150],
-  ["24", 200],
-  ["25", 150],
-  ["26", 200],
-  ["27", 150],
-  ["28", 200],
-  ["29", 150],
-  ["30", 200],
-  ["31", 150],
-];
-
-export const maxWeightOptions = {
-  title: "Max lifting weight change",
-  curveType: "function",
-  legend: "none",
-  vAxis: {
-    title: "Weight Lifted (Ibs)",
-  },
-  hAxis: {
-    title: "Day",
-  },
-  titleTextStyle: {
-    fontSize: 18,
-  },
-  colors: ["red"],
-  pointSize: 5,
-};
-
 const ProgressPage = () => {
+  const { userData } = useUser();
   const [selectedDate, setSelectedDate] = useState<String>(
     new Date().toLocaleString("en-US", { month: "long", year: "numeric" })
   );
+  const [bodyWeightData, setBodyWeightData] = useState<any>(null);
+
   const onChange = (date: any) => {
+    let temp: any[] = [];
     setSelectedDate(
-      date.toLocaleString("en-US", { month: "long", year: "numeric" })
+      //03-01-2024
+      date
+        .toLocaleString("en-US", {
+          year: "numeric",
+          month: "2-digit",
+        })
+        .replace(/\//g, "-")
     );
+    userData?.bodyweight_history?.filter((element: any) => {
+      if (
+        new Date(element.date)
+          .toLocaleString("en-US", {
+            year: "numeric",
+            month: "2-digit",
+          })
+          .replace(/\//g, "-") ===
+        date
+          .toLocaleString("en-US", {
+            year: "numeric",
+            month: "2-digit",
+          })
+          .replace(/\//g, "-")
+      ) {
+        temp.push([
+          Number(
+            new Date(element.date).toLocaleString("en-US", {
+              day: "numeric",
+            })
+          ) + 1,
+          element.weight,
+        ]);
+        temp.sort((a, b) => a[0] - b[0]);
+        temp = temp.map((subArray) => [String(subArray[0]), subArray[1]]);
+      }
+    });
+    if (temp.length === 0) {
+      setBodyWeightData(null);
+    } else {
+      temp.unshift(["Day", "Body Weight (Ibs)"]);
+      console.log(temp);
+      setBodyWeightData(temp);
+    }
   };
 
   const tileClassName = ({
@@ -145,22 +103,19 @@ const ProgressPage = () => {
         />
       </div>
       <h4 className="text-center mt-4">Your progress in {selectedDate}</h4>
-      <Chart
-        chartType="LineChart"
-        width="100%"
-        height="400px"
-        loader={<div>Loading Chart</div>}
-        data={bodyWeightData}
-        options={bodyWeightOptions}
-      />
-      <Chart
-        chartType="LineChart"
-        width="100%"
-        height="400px"
-        loader={<div>Loading Chart</div>}
-        data={maxWeightData}
-        options={maxWeightOptions}
-      />
+      {bodyWeightData != null ? (
+        <Chart
+          chartType="LineChart"
+          width="100%"
+          height="400px"
+          loader={<div>Loading Chart</div>}
+          data={bodyWeightData}
+          options={bodyWeightOptions}
+        />
+      ) : (
+        <h5 className="mt-3 text-center">No Body Weight Recorded</h5>
+      )}
+
       <h4>Photo Gallery for {selectedDate}</h4>
       <div className="image-container">
         <div className="image-wrapper">

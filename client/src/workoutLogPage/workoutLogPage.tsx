@@ -24,7 +24,6 @@ const WorkoutLogPage = () => {
   const onChange = (date: any) => {
     setSelectedDate(dateFormatter(date));
     userData?.workoutHistory.find((element: any) => {
-      let temp: string[] = [];
       if (element.date.substring(0, 10) === dateFormatter(date)) {
         setCurrentDayWorkout(element);
       } else {
