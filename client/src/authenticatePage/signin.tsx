@@ -24,6 +24,38 @@ const SignIn = (props: any) => {
   const { setUser } = useUser();
   const navigate = useNavigate();
 
+  const forgotPasswordHandler = () => {
+    Swal.fire({
+      title: "Forgot Password",
+      text: "Please enter your email address",
+      input: "email",
+      inputAttributes: {
+        autocapitalize: "off",
+      },
+      showCancelButton: true,
+      confirmButtonText: "Submit",
+      showLoaderOnConfirm: true,
+      preConfirm: (email) => {
+        const query = `http://localhost:3000/passwordReset/${email}`;
+        fetch(query, {
+          method: "PUT",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+        Swal.fire({
+          title: "Email sent",
+          text: "Please check your email.",
+        });
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+    });
+  };
+
   //When user try to sign in, see if the user exists, if so, store their data in context
   const signInHandler = () => {
     const email = (document.getElementById("email") as HTMLInputElement)?.value;
@@ -103,7 +135,15 @@ const SignIn = (props: any) => {
                 </button>
               </small>
               <span style={{ margin: "0 5px" }}>|</span>
-              <small>Forgot password?</small>
+              <small>
+                <button
+                  type="button"
+                  className="text-button"
+                  onClick={() => forgotPasswordHandler()}
+                >
+                  Forgot password?
+                </button>
+              </small>
             </div>
           </div>
         </form>
