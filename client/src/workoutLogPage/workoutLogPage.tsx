@@ -7,7 +7,7 @@ import creator from "../assets/creator.png";
 import AddWorkoutForm from "./addWorkoutForm";
 import WorkoutRecord from "./workoutRecord";
 import WorkoutJournal from "./workoutJournal";
-import { useUser } from "../SesssionManager/session";
+import { UserData, useUser } from "../SesssionManager/session";
 const WorkoutLogPage = () => {
   const { userData } = useUser();
   const dateFormatter = (date: any) => {
@@ -17,6 +17,9 @@ const WorkoutLogPage = () => {
   };
   const [selectedDate, setSelectedDate] = useState<String>(
     dateFormatter(new Date())
+  );
+  const [temporaryChanges, setTemporaryChanges] = useState<UserData | null>(
+    userData
   );
   const [currentDayWorkout, setCurrentDayWorkout] = useState<any>(null);
   const [currentDayWeight, setCurrentDayWeight] = useState(0);
@@ -104,21 +107,14 @@ const WorkoutLogPage = () => {
                   actionId={workout.actionId}
                 ></WorkoutRecord>
               ))}
-              {/* <WorkoutRecord
-                title="Lat Pull Down"
-                repetition="3x10"
-                weight="50"
-                note="Good"
-                actionId={1}
-              ></WorkoutRecord> */}
             </tbody>
           </table>
           {editing ? (
             <button className="btn btn-outline-primary">Add Workout</button>
           ) : null}
-          {/* when button clicked, render <AddWorkoutForm /> */}
         </div>
         <WorkoutJournal
+          dataChange={setTemporaryChanges}
           rate={currentDayWorkout?.rate}
           picture={currentDayWorkout?.daily_picture}
           weight={currentDayWeight}

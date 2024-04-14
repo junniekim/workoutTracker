@@ -128,13 +128,12 @@ const ProfilePage = () => {
         />
         {mode === "edit" && (
           <div className="text-center mt-3 d-flex flex-column">
-            <h6></h6>
             <input type="file" onChange={onFileChange} />
             <button
               onClick={() => {
                 updateProfilePicture();
               }}
-              className="btn btn-outline-secondary mb-2"
+              className="btn btn-outline-secondary mt-2 mb-2"
             >
               Update my profile picture
             </button>

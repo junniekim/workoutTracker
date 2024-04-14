@@ -4,6 +4,7 @@ interface WorkoutJournalProps {
   weight?: number;
   journal?: string;
   editing: boolean;
+  dataChange?: (data: any) => void;
 }
 const WorkoutJournal: React.FC<WorkoutJournalProps> = ({
   picture,
@@ -11,6 +12,7 @@ const WorkoutJournal: React.FC<WorkoutJournalProps> = ({
   weight,
   journal,
   editing,
+  dataChange,
 }) => {
   return (
     <div className="col-12 col-lg-5 text-center">
