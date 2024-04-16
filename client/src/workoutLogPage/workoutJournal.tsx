@@ -5,6 +5,7 @@ interface WorkoutJournalProps {
   journal?: string;
   editing: boolean;
   dataChange?: (data: any) => void;
+  weightChange?(data: any): void;
 }
 const WorkoutJournal: React.FC<WorkoutJournalProps> = ({
   picture,
@@ -13,6 +14,7 @@ const WorkoutJournal: React.FC<WorkoutJournalProps> = ({
   journal,
   editing,
   dataChange,
+  weightChange,
 }) => {
   return (
     <div className="col-12 col-lg-5 text-center">
@@ -20,6 +22,10 @@ const WorkoutJournal: React.FC<WorkoutJournalProps> = ({
         <div>
           <h4>Workout Journal</h4>
           <div className="mt-3">
+            {picture && (
+              <img src={picture} width="400px" className="img-fluid mb-2"></img>
+            )}
+
             <button className="mb-2 btn btn-outline-secondary">
               Upload Image
             </button>
@@ -30,9 +36,17 @@ const WorkoutJournal: React.FC<WorkoutJournalProps> = ({
                 <input
                   style={{ width: "100%" }}
                   type="range"
-                  min="0"
-                  max="4"
+                  min="1"
+                  max="5"
                   step="1"
+                  value={rate || "5"}
+                  onChange={(e) =>
+                    dataChange &&
+                    dataChange((prevState: any) => ({
+                      ...prevState,
+                      rate: Number(e.target.value),
+                    }))
+                  }
                 />
               </div>
 
@@ -44,13 +58,29 @@ const WorkoutJournal: React.FC<WorkoutJournalProps> = ({
                 type="number"
                 placeholder="Weight"
                 className="form-control"
+                value={weight || ""}
                 id="editTitle"
+                onChange={(e) =>
+                  weightChange &&
+                  weightChange((prevState: any) => ({
+                    ...prevState,
+                    weight: Number(e.target.value),
+                  }))
+                }
               />
             </div>
             <textarea
               style={{ width: "100%", height: "130px" }}
               className="mt-3"
               placeholder="Leave notes about your workout here!"
+              value={journal || ""}
+              onChange={(e) =>
+                dataChange &&
+                dataChange((prevState: any) => ({
+                  ...prevState,
+                  journal: e.target.value,
+                }))
+              }
             ></textarea>
           </div>
         </div>
@@ -69,10 +99,7 @@ const WorkoutJournal: React.FC<WorkoutJournalProps> = ({
             ></img>
           )}
           {rate && <h5>Work out was {rate}</h5>}
-
-          {(weight || weight != 0) && (
-            <h5>As of today, I weigh {weight} pounds</h5>
-          )}
+          {weight && <h5>As of today, I weigh {weight} pounds</h5>}
           {journal && <p>{journal}</p>}
         </div>
       )}

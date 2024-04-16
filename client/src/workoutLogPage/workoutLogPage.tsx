@@ -1,46 +1,14 @@
 import TitleHeader from "../Shared/titleHeader";
 import { useState } from "react";
 import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
-import "./workoutLogPage.css";
-import creator from "../assets/creator.png";
-import AddWorkoutForm from "./addWorkoutForm";
+// import AddWorkoutForm from "./addWorkoutForm";
 import WorkoutRecord from "./workoutRecord";
 import WorkoutJournal from "./workoutJournal";
-import { UserData, useUser } from "../SesssionManager/session";
+import { useUser } from "../SesssionManager/session";
+import "react-calendar/dist/Calendar.css";
+import "./workoutLogPage.css";
 const WorkoutLogPage = () => {
-  const { userData } = useUser();
-  const dateFormatter = (date: any) => {
-    return `${date.getFullYear()}-${(date.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
-  };
-  const [selectedDate, setSelectedDate] = useState<String>(
-    dateFormatter(new Date())
-  );
-  const [temporaryChanges, setTemporaryChanges] = useState<UserData | null>(
-    userData
-  );
-  const [currentDayWorkout, setCurrentDayWorkout] = useState<any>(null);
-  const [currentDayWeight, setCurrentDayWeight] = useState(0);
-  const [editing, setEditing] = useState(false);
-  const onChange = (date: any) => {
-    setSelectedDate(dateFormatter(date));
-    userData?.workoutHistory.find((element: any) => {
-      if (element.date.substring(0, 10) === dateFormatter(date)) {
-        setCurrentDayWorkout(element);
-      } else {
-        setCurrentDayWorkout(null);
-      }
-    });
-    userData?.bodyweight_history.find((element: any) => {
-      if (element.date.substring(0, 10) === dateFormatter(date)) {
-        setCurrentDayWeight(element.weight);
-      } else {
-        setCurrentDayWeight(0);
-      }
-    });
-  };
+  //helper
   const tileClassName = ({ date }: { date: Date }): string | null => {
     const currentYear = new Date().getFullYear();
     const currentMonth = new Date().getMonth();
@@ -51,22 +19,114 @@ const WorkoutLogPage = () => {
     }
     return null;
   };
+  const dateFormatter = (date: any) => {
+    return `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  };
+  const { userData, setUser } = useUser();
+  //workout at selected date.
+  const [currentDayWorkout, setCurrentDayWorkout] = useState<any>(null);
+  //weight at the selected date
+  const [currentDayWeight, setCurrentDayWeight] = useState<any>(null);
+  //current mode
+  const [editing, setEditing] = useState(false);
+  //selected date
+  const [selectedDate, setSelectedDate] = useState<String>(
+    dateFormatter(new Date())
+  );
+
+  //when date changes
+  const onChange = (date: any) => {
+    setSelectedDate(dateFormatter(date));
+
+    //update currentDayWorkout and currentDayWeight
+    const foundWorkout = userData?.workoutHistory.find((element: any) => {
+      return element.date.substring(0, 10) === dateFormatter(date);
+    });
+
+    setCurrentDayWorkout(foundWorkout || null);
+    const foundWeight = userData?.bodyweight_history.find((element: any) => {
+      return element.date.substring(0, 10) === dateFormatter(date);
+    });
+    setCurrentDayWeight(foundWeight || null);
+  };
+
+  const saveHandler = (): void => {
+    if (editing) {
+      if (currentDayWorkout !== null) {
+        if (!currentDayWorkout.date) {
+          userData!.workoutHistory.push({
+            date: String(selectedDate),
+            daily_picture: currentDayWorkout.daily_picture ?? "",
+            journal: currentDayWorkout.journal ?? "",
+            rate: currentDayWorkout.rate ?? "",
+            workout_list: currentDayWorkout.workout_list ?? [],
+          });
+          console.log(userData);
+        } else {
+          let workoutHistoryIndex: any = userData?.workoutHistory.findIndex(
+            (element: any) => {
+              return element.date.substring(0, 10) === selectedDate;
+            }
+          );
+          if (workoutHistoryIndex !== -1) {
+            userData!.workoutHistory[workoutHistoryIndex] = currentDayWorkout;
+          }
+        }
+      }
+      if (currentDayWeight !== null) {
+        if (!currentDayWeight.date) {
+          userData!.bodyweight_history.push({
+            weight: currentDayWeight.weight,
+            date: String(selectedDate),
+          });
+        } else {
+          let weightHistoryIndex: any = userData?.bodyweight_history.findIndex(
+            (element: any) => {
+              return element.date.substring(0, 10) === selectedDate;
+            }
+          );
+          if (weightHistoryIndex !== -1) {
+            userData!.bodyweight_history[weightHistoryIndex] = currentDayWeight;
+          }
+        }
+      }
+      setUser(userData);
+      const query = `http://localhost:3000/update/${userData?._id}`;
+      fetch(query, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setUser(data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+    setEditing(!editing);
+  };
+
   return (
     <div>
       <TitleHeader title="💪My Tracking"></TitleHeader>
       <div className="d-flex justify-content-center">
-        <Calendar
-          maxDetail="month"
-          onChange={onChange}
-          maxDate={new Date()}
-          tileClassName={tileClassName}
-        />
+        {!editing && (
+          <Calendar
+            maxDetail="month"
+            onChange={onChange}
+            maxDate={new Date()}
+            tileClassName={tileClassName}
+          />
+        )}
       </div>
       <div className="col-12 text-center mt-3">
-        <button
-          className="btn mb-3 btn-primary"
-          onClick={() => setEditing(!editing)}
-        >
+        <button className="btn mb-3 btn-primary" onClick={() => saveHandler()}>
           {editing
             ? `Save Your Journey on ${selectedDate}`
             : `Mark Your Journey on ${selectedDate}`}
@@ -114,10 +174,11 @@ const WorkoutLogPage = () => {
           ) : null}
         </div>
         <WorkoutJournal
-          dataChange={setTemporaryChanges}
+          dataChange={setCurrentDayWorkout}
+          weightChange={setCurrentDayWeight}
           rate={currentDayWorkout?.rate}
           picture={currentDayWorkout?.daily_picture}
-          weight={currentDayWeight}
+          weight={currentDayWeight?.weight}
           journal={currentDayWorkout?.journal}
           editing={editing}
         ></WorkoutJournal>

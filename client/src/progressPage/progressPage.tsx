@@ -152,13 +152,17 @@ const ProgressPage = () => {
         {bodyImageData != null && bodyImageData.length > 0 ? (
           bodyImageData.map((image: any, index: number) => (
             <div className="image-wrapper" key={index}>
-              <img src={image[1]} alt={`image-${index}`} />
-              <p>
-                {selectedDate.slice(0, 2) +
-                  "-" +
-                  image[0] +
-                  selectedDate.slice(2)}
-              </p>
+              {image[1] && (
+                <div>
+                  <img src={image[1]} alt={`image-${index}`} />
+                  <p>
+                    {selectedDate.slice(0, 2) +
+                      "-" +
+                      image[0] +
+                      selectedDate.slice(2)}
+                  </p>
+                </div>
+              )}
             </div>
           ))
         ) : (

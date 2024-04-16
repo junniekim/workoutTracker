@@ -17,8 +17,6 @@ const ProfilePage = () => {
     } else {
       console.log(JSON.stringify(temporaryChanges));
       setUser(temporaryChanges);
-      //?fname=${temporaryChanges?.first_name}&lname=${temporaryChanges?.last_name}
-      //&email=${temporaryChanges?.email_address}&phone=${temporaryChanges?.phone_number}&password=${temporaryChanges?.password}&birthday=${temporaryChanges?.birthday}
       const query = `http://localhost:3000/update/${userData?._id}`;
       fetch(query, {
         method: "PUT",
