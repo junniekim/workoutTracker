@@ -54,7 +54,10 @@ const WorkoutLogPage = () => {
 
   const saveHandler = (): void => {
     if (editing) {
+      //see if there is any data entered
       if (currentDayWorkout !== null) {
+        //see if the data already exists
+        // If no, create, if yes, update
         if (!currentDayWorkout.date) {
           userData!.workoutHistory.push({
             date: String(selectedDate),
@@ -75,6 +78,7 @@ const WorkoutLogPage = () => {
           }
         }
       }
+      //repeat for body weight
       if (currentDayWeight !== null) {
         if (!currentDayWeight.date) {
           userData!.bodyweight_history.push({
@@ -92,7 +96,9 @@ const WorkoutLogPage = () => {
           }
         }
       }
+      //update context
       setUser(userData);
+      //update database
       const query = `http://localhost:3000/update/${userData?._id}`;
       fetch(query, {
         method: "PUT",
@@ -164,6 +170,7 @@ const WorkoutLogPage = () => {
                   repetition={workout.rep}
                   weight={workout.weight}
                   note={workout.note}
+                  minute={workout.minute}
                   actionId={workout.actionId}
                 ></WorkoutRecord>
               ))}

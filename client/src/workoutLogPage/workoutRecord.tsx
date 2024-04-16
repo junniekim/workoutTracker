@@ -1,9 +1,10 @@
 interface WorkoutRecordProps {
   title: string;
-  repetition: string;
-  weight: string;
-  note: string;
-  actionId: number;
+  repetition?: string;
+  weight?: string;
+  note?: string;
+  actionId?: number;
+  minute?: number;
 }
 
 const WorkoutRecord: React.FC<WorkoutRecordProps> = ({
@@ -12,6 +13,7 @@ const WorkoutRecord: React.FC<WorkoutRecordProps> = ({
   weight,
   note,
   actionId,
+  minute,
 }) => {
   return (
     <tr>
