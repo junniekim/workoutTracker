@@ -7,6 +7,8 @@ import WorkoutJournal from "./workoutJournal";
 import { useUser } from "../SesssionManager/session";
 import "react-calendar/dist/Calendar.css";
 import "./workoutLogPage.css";
+//PICK BACK UP FROM HERE. GET WORKOUTS SPLIT INTO CARDIO AND WEIGHT TRANIING ALSO CUSTOM
+
 const WorkoutLogPage = () => {
   //helper
   const tileClassName = ({ date }: { date: Date }): string | null => {
@@ -59,6 +61,7 @@ const WorkoutLogPage = () => {
         //see if the data already exists
         // If no, create, if yes, update
         if (!currentDayWorkout.date) {
+          console.log(currentDayWorkout.workout_list);
           userData!.workoutHistory.push({
             date: String(selectedDate),
             daily_picture: currentDayWorkout.daily_picture ?? "",
@@ -68,6 +71,7 @@ const WorkoutLogPage = () => {
           });
           console.log(userData);
         } else {
+          console.log(currentDayWorkout.workout_list);
           let workoutHistoryIndex: any = userData?.workoutHistory.findIndex(
             (element: any) => {
               return element.date.substring(0, 10) === selectedDate;
@@ -96,7 +100,7 @@ const WorkoutLogPage = () => {
           }
         }
       }
-      //update context
+      console.log(userData);
       setUser(userData);
       //update database
       const query = `http://localhost:3000/update/${userData?._id}`;
@@ -108,9 +112,7 @@ const WorkoutLogPage = () => {
         body: JSON.stringify(userData),
       })
         .then((response) => response.json())
-        .then((data) => {
-          setUser(data);
-        })
+        .then((data) => {})
         .catch((error) => {
           console.error("Error:", error);
         });
@@ -145,37 +147,51 @@ const WorkoutLogPage = () => {
         <div className="col-12 col-lg-6 text-center">
           <h4>Workout Tracker</h4>
           {/* No workout given, then display no content */}
-          <table className="mb-3" style={{ width: "100%" }}>
-            <colgroup>
-              <col style={{ width: "40%" }}></col>
-              <col style={{ width: "25%" }}></col>
-              <col style={{ width: "5%" }}></col>
-              <col style={{ width: "20%" }}></col>
-              <col style={{ width: "5%" }}></col>
-            </colgroup>
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Rep/Sets</th>
-                <th>Weight</th>
-                <th>Note</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentDayWorkout?.workout_list?.map((workout: any) => (
-                <WorkoutRecord
-                  key={workout._id}
-                  title={workout.workout}
-                  repetition={workout.rep}
-                  weight={workout.weight}
-                  note={workout.note}
-                  minute={workout.minute}
-                  actionId={workout.actionId}
-                ></WorkoutRecord>
-              ))}
-            </tbody>
-          </table>
+          {currentDayWorkout?.workout_list.length > 0 ? (
+            <table className="mb-3" style={{ width: "100%" }}>
+              <colgroup>
+                <col style={{ width: "20%" }}></col>
+                <col style={{ width: "20%" }}></col>
+                <col style={{ width: "20%" }}></col>
+                <col style={{ width: "20%" }}></col>
+                <col style={{ width: "20%" }}></col>
+                {editing && <col style={{ width: "5%" }}></col>}
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Rep</th>
+                  <th>Set</th>
+                  <th>Weight</th>
+                  <th>Note</th>
+                  {editing && <th></th>}
+                </tr>
+              </thead>
+              <tbody>
+                {currentDayWorkout?.workout_list?.map(
+                  (workout: any, index: number) => (
+                    <WorkoutRecord
+                      key={workout._id}
+                      cardio={workout.cardio}
+                      title={workout.workout}
+                      repetition={workout.rep}
+                      weight={workout.weight}
+                      note={workout.note}
+                      set={workout.set}
+                      minute={workout.minute}
+                      actionId={workout.actionId}
+                      editing={editing}
+                      index={index}
+                      dataChange={setCurrentDayWorkout}
+                    ></WorkoutRecord>
+                  )
+                )}
+              </tbody>
+            </table>
+          ) : (
+            <div>No content</div>
+          )}
+
           {editing ? (
             <button className="btn btn-outline-primary">Add Workout</button>
           ) : null}

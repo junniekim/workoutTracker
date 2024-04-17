@@ -22,6 +22,7 @@ export interface UserData {
       journal: string;
       rate: number;
       workout_list: {
+        cardio: boolean;
         note: string;
         rep: number;
         set: number;
