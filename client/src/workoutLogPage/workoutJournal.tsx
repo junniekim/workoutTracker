@@ -58,9 +58,9 @@ const WorkoutJournal: React.FC<WorkoutJournalProps> = ({
                 type="number"
                 placeholder="Weight"
                 className="form-control"
-                value={weight || ""}
+                defaultValue={weight || ""}
                 id="editTitle"
-                onChange={(e) =>
+                onBlur={(e) =>
                   weightChange &&
                   weightChange((prevState: any) => ({
                     ...prevState,
@@ -73,8 +73,8 @@ const WorkoutJournal: React.FC<WorkoutJournalProps> = ({
               style={{ width: "100%", height: "130px" }}
               className="mt-3"
               placeholder="Leave notes about your workout here!"
-              value={journal || ""}
-              onChange={(e) =>
+              defaultValue={journal || ""}
+              onBlur={(e) =>
                 dataChange &&
                 dataChange((prevState: any) => ({
                   ...prevState,

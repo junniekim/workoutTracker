@@ -1,6 +1,7 @@
 import TitleHeader from "../Shared/titleHeader";
 import { useState } from "react";
 import Calendar from "react-calendar";
+import Swal from "sweetalert2";
 // import AddWorkoutForm from "./addWorkoutForm";
 import WorkoutRecord from "./workoutRecord";
 import WorkoutJournal from "./workoutJournal";
@@ -26,6 +27,16 @@ const WorkoutLogPage = () => {
       .toString()
       .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
   };
+
+  const addWorkoutHandler = (determine: boolean) => {
+    let det = determine;
+
+    setCurrentDayWorkout((prevState?: any) => ({
+      ...(prevState || {}),
+      workout_list: [...(prevState?.workout_list || []), { cardio: det }],
+    }));
+  };
+
   const { userData, setUser } = useUser();
   //workout at selected date.
   const [currentDayWorkout, setCurrentDayWorkout] = useState<any>(null);
@@ -56,12 +67,24 @@ const WorkoutLogPage = () => {
 
   const saveHandler = (): void => {
     if (editing) {
+      if (
+        currentDayWorkout?.workout_list.some(
+          (workout: any) =>
+            workout.workout === undefined || workout.workout === null
+        )
+      ) {
+        Swal.fire({
+          icon: "error",
+          title: "Please fill in all workout title",
+        });
+        return;
+      }
       //see if there is any data entered
+      console.log(currentDayWorkout?.workout_list);
       if (currentDayWorkout !== null) {
         //see if the data already exists
         // If no, create, if yes, update
         if (!currentDayWorkout.date) {
-          console.log(currentDayWorkout.workout_list);
           userData!.workoutHistory.push({
             date: String(selectedDate),
             daily_picture: currentDayWorkout.daily_picture ?? "",
@@ -69,9 +92,7 @@ const WorkoutLogPage = () => {
             rate: currentDayWorkout.rate ?? "",
             workout_list: currentDayWorkout.workout_list ?? [],
           });
-          console.log(userData);
         } else {
-          console.log(currentDayWorkout.workout_list);
           let workoutHistoryIndex: any = userData?.workoutHistory.findIndex(
             (element: any) => {
               return element.date.substring(0, 10) === selectedDate;
@@ -100,7 +121,6 @@ const WorkoutLogPage = () => {
           }
         }
       }
-      console.log(userData);
       setUser(userData);
       //update database
       const query = `http://localhost:3000/update/${userData?._id}`;
@@ -150,8 +170,7 @@ const WorkoutLogPage = () => {
           {currentDayWorkout?.workout_list.length > 0 ? (
             <table className="mb-3" style={{ width: "100%" }}>
               <colgroup>
-                <col style={{ width: "20%" }}></col>
-                <col style={{ width: "20%" }}></col>
+                <col style={{ width: "40%" }}></col>
                 <col style={{ width: "20%" }}></col>
                 <col style={{ width: "20%" }}></col>
                 <col style={{ width: "20%" }}></col>
@@ -163,7 +182,6 @@ const WorkoutLogPage = () => {
                   <th>Rep</th>
                   <th>Set</th>
                   <th>Weight</th>
-                  <th>Note</th>
                   {editing && <th></th>}
                 </tr>
               </thead>
@@ -171,7 +189,7 @@ const WorkoutLogPage = () => {
                 {currentDayWorkout?.workout_list?.map(
                   (workout: any, index: number) => (
                     <WorkoutRecord
-                      key={workout._id}
+                      key={Math.random().toFixed(8)}
                       cardio={workout.cardio}
                       title={workout.workout}
                       repetition={workout.rep}
@@ -193,7 +211,23 @@ const WorkoutLogPage = () => {
           )}
 
           {editing ? (
-            <button className="btn btn-outline-primary">Add Workout</button>
+            <div
+              className="d-flex justify-content-center"
+              style={{ gap: "10px" }}
+            >
+              <button
+                className="mt-2 btn btn-outline-primary"
+                onClick={() => addWorkoutHandler(false)}
+              >
+                Add Weight Training
+              </button>
+              <button
+                className="mt-2 btn btn-outline-primary"
+                onClick={() => addWorkoutHandler(true)}
+              >
+                Add Cardio Training
+              </button>
+            </div>
           ) : null}
         </div>
         <WorkoutJournal

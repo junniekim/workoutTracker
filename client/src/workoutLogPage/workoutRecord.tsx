@@ -1,3 +1,6 @@
+import { useState } from "react";
+import Select from "react-select";
+
 interface WorkoutRecordProps {
   title: string;
   repetition?: string;
@@ -25,31 +28,107 @@ const WorkoutRecord: React.FC<WorkoutRecordProps> = ({
   set,
   dataChange,
 }) => {
-  // console.log("workout record title:", title);
-  // console.log("workout record repetition:", repetition);
-  // console.log("workout record weight:", weight);
-  // console.log("workout record note:", note);
-  // console.log("workout record actionId:", actionId);
-  // console.log("workout record minute:", minute);
-  // console.log("workout record editing:", editing);
-  // console.log("workout record index:", index);
-  // console.log("workout record cardio:", cardio);
-  // console.log("workout record set:", set);
-  // console.log("workout record dataChange:", dataChange);
+  const deleteWorkout = () => {
+    dataChange &&
+      dataChange((prevState: any) => ({
+        ...prevState,
+        workout_list: prevState.workout_list.filter(
+          (workout: any, i: number) => i !== index
+        ),
+      }));
+  };
+  //
+  //
+  const [cardioWorkoutList, setCardioWorkoutList] = useState<any[]>([]);
+  const [weightWorkoutList, setWeightWorkoutList] = useState<any[]>([]);
+  let cardioWorkoutListArr: any = [];
+  let weightWorkoutListArr: any = [];
+  const query = `http://localhost:3000/workout`;
+  if (weightWorkoutList.length == 0 || cardioWorkoutList.length == 0) {
+    fetch(query)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        data.filter((workout: any) => {
+          workout.target[0] === "Cardio"
+            ? cardioWorkoutListArr.push(workout.workout_name)
+            : weightWorkoutListArr.push(workout.workout_name);
+        });
+        setCardioWorkoutList(cardioWorkoutListArr);
+        setWeightWorkoutList(weightWorkoutListArr);
+      })
+      .catch((error) => {});
+  }
+
   return (
     <>
       {editing ? (
         <tr>
-          <td>{title}</td>
+          <td>
+            {cardio ? (
+              <select
+                name="workouts"
+                id="workouts"
+                className="form-control"
+                value={title || ""}
+                onChange={(e) =>
+                  dataChange &&
+                  dataChange((prevState: any) => ({
+                    ...prevState,
+                    workout_list: prevState.workout_list.map(
+                      (item: any, i: number) =>
+                        i === index
+                          ? { ...item, workout: e.target.value }
+                          : item
+                    ),
+                  }))
+                }
+              >
+                <option value="">Select a workout</option>
+                {cardioWorkoutList.map((workout: any) => (
+                  <option key={Math.random().toFixed(8)} value={workout}>
+                    {workout}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <select
+                value={title || ""}
+                name="workouts"
+                id="workouts"
+                className="form-control"
+                onChange={(e) =>
+                  dataChange &&
+                  dataChange((prevState: any) => ({
+                    ...prevState,
+                    workout_list: prevState.workout_list.map(
+                      (item: any, i: number) =>
+                        i === index
+                          ? { ...item, workout: e.target.value }
+                          : item
+                    ),
+                  }))
+                }
+              >
+                <option value="">Select a workout</option>
+                {weightWorkoutList.map((workout: any) => (
+                  <option key={Math.random().toFixed(8)} value={workout}>
+                    {workout}
+                  </option>
+                ))}
+              </select>
+            )}
+          </td>
           {cardio ? (
             <td colSpan={3}>
               <input
                 type="number"
                 placeholder="In Minute..."
                 className="form-control"
-                value={minute || ""}
+                defaultValue={minute || ""}
                 id="editMinute"
-                onChange={(e) =>
+                onBlur={(e) =>
                   dataChange &&
                   dataChange((prevState: any) => ({
                     ...prevState,
@@ -69,9 +148,9 @@ const WorkoutRecord: React.FC<WorkoutRecordProps> = ({
                 <input
                   type="number"
                   className="form-control"
-                  value={repetition || ""}
+                  defaultValue={repetition || ""}
                   id="editRep"
-                  onChange={(e) =>
+                  onBlur={(e) =>
                     dataChange &&
                     dataChange((prevState: any) => ({
                       ...prevState,
@@ -89,9 +168,9 @@ const WorkoutRecord: React.FC<WorkoutRecordProps> = ({
                 <input
                   type="number"
                   className="form-control"
-                  value={set || ""}
+                  defaultValue={set || ""}
                   id="editSet"
-                  onChange={(e) =>
+                  onBlur={(e) =>
                     dataChange &&
                     dataChange((prevState: any) => ({
                       ...prevState,
@@ -109,9 +188,9 @@ const WorkoutRecord: React.FC<WorkoutRecordProps> = ({
                 <input
                   type="number"
                   className="form-control"
-                  value={weight || ""}
+                  defaultValue={weight || ""}
                   id="editWeight"
-                  onChange={(e) =>
+                  onBlur={(e) =>
                     dataChange &&
                     dataChange((prevState: any) => ({
                       ...prevState,
@@ -128,9 +207,13 @@ const WorkoutRecord: React.FC<WorkoutRecordProps> = ({
             </>
           )}
 
-          <td>{note}</td>
           <td>
-            <button className="text-button-delete">X</button>
+            <button
+              className="text-button-delete"
+              onClick={() => deleteWorkout()}
+            >
+              X
+            </button>
           </td>
         </tr>
       ) : (
@@ -138,7 +221,9 @@ const WorkoutRecord: React.FC<WorkoutRecordProps> = ({
           <td>{title}</td>
           {cardio ? (
             <>
-              <td colSpan={3}>{minute} Minutes</td>
+              <td colSpan={3}>
+                {minute} {minute && "Minutes"}
+              </td>
             </>
           ) : (
             <>
@@ -147,7 +232,6 @@ const WorkoutRecord: React.FC<WorkoutRecordProps> = ({
               <td>{weight}</td>
             </>
           )}
-          <td>{note}</td>
         </tr>
       )}
     </>
