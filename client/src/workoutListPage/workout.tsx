@@ -112,7 +112,7 @@ const Workout: React.FC<WorkoutProps> = ({
         ) : (
           <div>
             <div>
-              <h3>{title}</h3>
+              <h5>{title}</h5>
             </div>
             <img
               src={image}
@@ -120,7 +120,7 @@ const Workout: React.FC<WorkoutProps> = ({
               style={{ maxHeight: "200px", minHeight: "200px" }}
               alt={title}
             />
-            <h3 className="grey">{description}</h3>
+            <h5 className="grey">{description}</h5>
           </div>
         )}
       </div>

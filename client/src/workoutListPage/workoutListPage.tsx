@@ -6,6 +6,7 @@ import Workout from "./workout";
 import { useEffect, useState } from "react";
 import { useUser } from "../SesssionManager/session";
 import Select from "react-select";
+import Swal from "sweetalert2";
 const WorkoutListPage = () => {
   //clear button
   //STATES
@@ -37,6 +38,8 @@ const WorkoutListPage = () => {
       target: string[];
     }>
   >([]);
+
+  const [temporarySaving, setTemporarySaving] = useState<any[]>([]);
 
   //fetch all workout data
   const query = `http://localhost:3000/workout`;
@@ -129,8 +132,25 @@ const WorkoutListPage = () => {
   const [path2, setPath2] = useState<any>("");
   const [path3, setPath3] = useState<any>("");
   const [path4, setPath4] = useState<any>("");
-
+  const discardWorkoutChange = () => {
+    setCustomWorkoutList(temporarySaving);
+  };
   const saveWorkout = () => {
+    if (
+      customWorkoutList?.some(
+        (workout: any) =>
+          workout.workout_name === undefined ||
+          workout.workout_name === null ||
+          workout.workout_name === ""
+      )
+    ) {
+      Swal.fire({
+        icon: "error",
+        title: "Please fill in all workout title",
+      });
+      return;
+    }
+
     setEditing(false);
   };
 
@@ -272,7 +292,6 @@ const WorkoutListPage = () => {
 
             <button
               onClick={() => {
-                saveWorkout();
                 setAdding(false);
               }}
               className="btn btn-success col-4 col-sm-4 col-md-3 col-lg-2"
@@ -309,7 +328,7 @@ const WorkoutListPage = () => {
               <button
                 className="btn btn-success"
                 onClick={() => {
-                  setEditing(!editing);
+                  saveWorkout();
                 }}
               >
                 Save Changes
@@ -317,6 +336,7 @@ const WorkoutListPage = () => {
               <button
                 className="btn btn-danger"
                 onClick={() => {
+                  discardWorkoutChange();
                   setEditing(!editing);
                 }}
               >
@@ -327,6 +347,7 @@ const WorkoutListPage = () => {
             <button
               className="btn btn-outline-primary"
               onClick={() => {
+                setTemporarySaving(customWorkoutList);
                 setEditing(!editing);
               }}
             >
