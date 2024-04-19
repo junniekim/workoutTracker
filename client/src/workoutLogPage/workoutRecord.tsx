@@ -85,7 +85,7 @@ const WorkoutRecord: React.FC<WorkoutRecordProps> = ({
                   }))
                 }
               >
-                <option value="">Select a workout</option>
+                <option value=""></option>
                 {cardioWorkoutList.map((workout: any) => (
                   <option key={Math.random().toFixed(8)} value={workout}>
                     {workout}
@@ -111,7 +111,7 @@ const WorkoutRecord: React.FC<WorkoutRecordProps> = ({
                   }))
                 }
               >
-                <option value="">Select a workout</option>
+                <option value=""></option>
                 {weightWorkoutList.map((workout: any) => (
                   <option key={Math.random().toFixed(8)} value={workout}>
                     {workout}

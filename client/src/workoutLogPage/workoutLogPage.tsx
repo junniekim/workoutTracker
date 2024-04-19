@@ -52,7 +52,6 @@ const WorkoutLogPage = () => {
   //when date changes
   const onChange = (date: any) => {
     setSelectedDate(dateFormatter(date));
-
     //update currentDayWorkout and currentDayWeight
     const foundWorkout = userData?.workoutHistory.find((element: any) => {
       return element.date.substring(0, 10) === dateFormatter(date);
@@ -146,6 +145,11 @@ const WorkoutLogPage = () => {
       <div className="d-flex justify-content-center">
         {!editing && (
           <Calendar
+            defaultValue={(() => {
+              const date = new Date(selectedDate.toString());
+              date.setDate(date.getDate() + 1);
+              return date;
+            })()}
             maxDetail="month"
             onChange={onChange}
             maxDate={new Date()}
