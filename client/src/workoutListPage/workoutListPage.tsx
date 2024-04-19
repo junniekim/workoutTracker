@@ -67,7 +67,7 @@ const WorkoutListPage = () => {
         //Set unique and valid target options
         let distinctWorkoutTargets = distinctWorkouts.map((workout: any) => {
           return {
-            value: workout.target[workout.target.length - 1],
+            value: workout.target,
             label: workout.target[workout.target.length - 1],
           };
         });
@@ -83,19 +83,21 @@ const WorkoutListPage = () => {
       });
   }
   //get custom workout list
-  const customQuery = `http://localhost:3000/customWorkout/${userData?._id}`;
-  if (customWorkoutList.length === 0) {
-    fetch(customQuery)
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setCustomWorkoutList(data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
+  useEffect(() => {
+    const customQuery = `http://localhost:3000/customWorkout/${userData?._id}`;
+    if (customWorkoutList.length === 0) {
+      fetch(customQuery)
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          setCustomWorkoutList(data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, []);
 
   let option1: any[] = [];
   let option2: any[] = [];
@@ -128,6 +130,10 @@ const WorkoutListPage = () => {
   const [path3, setPath3] = useState<any>("");
   const [path4, setPath4] = useState<any>("");
 
+  const saveWorkout = () => {
+    setEditing(false);
+  };
+
   useEffect(() => {
     setPath2("");
     setPath3("");
@@ -147,10 +153,7 @@ const WorkoutListPage = () => {
     setPath4("");
   };
   const test = () => {
-    console.log(path1);
-    console.log(path2);
-    console.log(path3);
-    console.log(path4);
+    console.log(customWorkoutList);
   };
   return (
     <div>
@@ -173,6 +176,9 @@ const WorkoutListPage = () => {
           padding: "20px",
         }}
       >
+        {adding && (
+          <h4 className="text-center">Set the target of your custom workout</h4>
+        )}
         <Select
           className="mt-2 mb-2  col-12 col-md-3 col-lg-2" // need to be bigger on bigger screen
           options={option1}
@@ -266,6 +272,7 @@ const WorkoutListPage = () => {
 
             <button
               onClick={() => {
+                saveWorkout();
                 setAdding(false);
               }}
               className="btn btn-success col-4 col-sm-4 col-md-3 col-lg-2"
@@ -283,16 +290,15 @@ const WorkoutListPage = () => {
           </div>
         ) : (
           <div className="col-12 row mt-2 justify-content-center">
-            {editing ? (
-              <button
-                onClick={() => {
-                  setAdding(true);
-                }}
-                className="btn btn-outline-primary col-4 col-sm-4 col-md-3 col-lg-2"
-              >
-                Add Custom Workout
-              </button>
-            ) : null}
+            <button
+              onClick={() => {
+                clearPath();
+                setAdding(true);
+              }}
+              className="btn btn-outline-primary col-4 col-sm-4 col-md-3 col-lg-2"
+            >
+              Add Custom Workout
+            </button>
           </div>
         )}
       </div>
@@ -376,6 +382,8 @@ const WorkoutListPage = () => {
           .map((workout: any, index: number) => (
             <Workout
               key={index}
+              index={index}
+              dataChange={setCustomWorkoutList}
               validTarget={validTarget}
               description={workout.target[workout.target.length - 1]}
               custom={workout.custom}
