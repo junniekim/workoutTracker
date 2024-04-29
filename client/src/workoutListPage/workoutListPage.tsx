@@ -220,6 +220,18 @@ const WorkoutListPage = () => {
         });
         return;
       }
+      if (
+        customWorkoutList.some(
+          (workout) => workout.workout_name === newWorkoutName
+        ) ||
+        workoutList.some((workout) => workout.workout_name === newWorkoutName)
+      ) {
+        Swal.fire({
+          icon: "error",
+          title: "Workout name already exists",
+        });
+        return;
+      }
       // Create a new WOrkout
       fetch("http://localhost:3000/newCustomWorkout", {
         method: "POST",
@@ -261,20 +273,7 @@ const WorkoutListPage = () => {
         });
       console.log("User Data (1)", userData);
 
-      // fetch(`http://localhost:3000/update/${userData?._id}`, {
-      //   method: "PUT",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(userData),
-      // })
-      //   .then((response) => response.json())
-      //   .then((data) => {
-      //     console.log("Second Call");
-      //   })
-      //   .catch((error) => {
-      //     console.error("Error:", error);
-      //   });
+      clearPath();
       setAdding(false);
     }
   };
@@ -298,18 +297,14 @@ const WorkoutListPage = () => {
     setPath3("");
     setPath4("");
   };
-  const test = () => {
-    console.log(userData);
+  const cancelNewWorkout = () => {
+    clearPath();
+    setNewWorkoutName("");
+    setAdding(false);
   };
+
   return (
     <div>
-      <button
-        onClick={() => {
-          test();
-        }}
-      >
-        testr
-      </button>
       <TitleHeader title="✏️My List"></TitleHeader>
       <div
         className="row d-flex flex-row"
@@ -424,7 +419,7 @@ const WorkoutListPage = () => {
               Save Workout
             </button>
             <button
-              onClick={() => saveWorkout()}
+              onClick={() => cancelNewWorkout()}
               className="btn btn-secondary col-4 col-sm-4 col-md-3 col-lg-2"
             >
               Cancel
