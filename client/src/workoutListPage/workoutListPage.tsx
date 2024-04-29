@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import { useUser } from "../SesssionManager/session";
 import Select from "react-select";
 import Swal from "sweetalert2";
+// Pick up by integrating tracker and creator, see how pre existing ones react to delete/update
+// => Add handler after edit/delete to go throguh workout history, and update accordingly
+
 const WorkoutListPage = () => {
   function arrayContainsArray<T>(
     arrayOfArrays: T[][],

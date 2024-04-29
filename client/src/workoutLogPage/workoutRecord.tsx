@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Select from "react-select";
+import { useUser } from "../SesssionManager/session";
 
 interface WorkoutRecordProps {
   title: string;
@@ -28,6 +29,7 @@ const WorkoutRecord: React.FC<WorkoutRecordProps> = ({
   set,
   dataChange,
 }) => {
+  const { userData } = useUser();
   const deleteWorkout = () => {
     dataChange &&
       dataChange((prevState: any) => ({
@@ -37,32 +39,82 @@ const WorkoutRecord: React.FC<WorkoutRecordProps> = ({
         ),
       }));
   };
-  //
-  //
   const [cardioWorkoutList, setCardioWorkoutList] = useState<any[]>([]);
   const [weightWorkoutList, setWeightWorkoutList] = useState<any[]>([]);
   let cardioWorkoutListArr: any = [];
   let weightWorkoutListArr: any = [];
+  //////////////////////////////////////////////////////////////////////////////////
   const query = `http://localhost:3000/workout`;
-  if (weightWorkoutList.length == 0 || cardioWorkoutList.length == 0) {
-    fetch(query)
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        data.filter((workout: any) => {
-          workout.target[0] === "Cardio"
-            ? cardioWorkoutListArr.push(workout.workout_name)
-            : weightWorkoutListArr.push(workout.workout_name);
-        });
-        setCardioWorkoutList(cardioWorkoutListArr);
-        setWeightWorkoutList(weightWorkoutListArr);
-      })
-      .catch((error) => {});
-  }
+  useEffect(() => {
+    cardioWorkoutListArr = [];
+    weightWorkoutListArr = [];
+    if (weightWorkoutList.length === 0 || cardioWorkoutList.length === 0) {
+      fetch(query)
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          data.filter((workout: any) => {
+            if (workout.custom === false) {
+              workout.target[0] === "Cardio"
+                ? cardioWorkoutListArr.push(workout.workout_name)
+                : weightWorkoutListArr.push(workout.workout_name);
+            } else {
+              console.log("Check", userData);
+              if (
+                userData!.customWorkout.includes(workout._id) ||
+                userData!.customWorkout.includes(workout.workout_name)
+              ) {
+                workout.target[0] === "Cardio"
+                  ? cardioWorkoutListArr.push(workout.workout_name)
+                  : weightWorkoutListArr.push(workout.workout_name);
+              }
+            }
+          });
+          setCardioWorkoutList(cardioWorkoutListArr);
+          setWeightWorkoutList(weightWorkoutListArr);
+        })
+        .catch((error) => {});
+    }
+  }, []);
+  //////////////////////////////////////////////////////////////////////////////////
+
+  // const query = `http://localhost:3000/workout`;
+  // if (weightWorkoutList.length == 0 || cardioWorkoutList.length == 0) {
+  //   fetch(query)
+  //     .then((response) => {
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       data.filter((workout: any) => {
+  //         if (workout.custom === false) {
+  //           workout.target[0] === "Cardio"
+  //             ? cardioWorkoutListArr.push(workout.workout_name)
+  //             : weightWorkoutListArr.push(workout.workout_name);
+  //         } else {
+  //           if (userData!.customWorkout.includes(workout._id)) {
+  //             workout.target[0] === "Cardio"
+  //               ? cardioWorkoutListArr.push(workout.workout_name)
+  //               : weightWorkoutListArr.push(workout.workout_name);
+  //           }
+  //         }
+  //       });
+  //       setCardioWorkoutList(cardioWorkoutListArr);
+  //       setWeightWorkoutList(weightWorkoutListArr);
+  //     })
+  //     .catch((error) => {});
+  // }
+  const test = () => {
+    console.log(userData);
+    console.log(cardioWorkoutList);
+    console.log(weightWorkoutList);
+  };
 
   return (
     <>
+      <button className="btn btn-priamry" onClick={() => test()}>
+        Click me
+      </button>
       {editing ? (
         <tr>
           <td>
