@@ -1,6 +1,4 @@
 import TitleHeader from "../Shared/titleHeader";
-import Dropdown from "react-dropdown";
-import noImage from "../assets/noImage.png";
 import "react-dropdown/style.css";
 import Workout from "./workout";
 import { useEffect, useState } from "react";
@@ -8,40 +6,60 @@ import { useUser } from "../SesssionManager/session";
 import Select from "react-select";
 import Swal from "sweetalert2";
 const WorkoutListPage = () => {
-  //clear button
+  function arrayContainsArray<T>(
+    arrayOfArrays: T[][],
+    targetArray: T[]
+  ): boolean {
+    return arrayOfArrays.some((array) =>
+      array.every((value, index) => value === targetArray[index])
+    );
+  }
+
   //STATES
   //current user data
-  const { userData } = useUser();
+  const { setUser, userData } = useUser();
   //valid set of options for setting target
   const [validTarget, setValidTarget] = useState<any[]>([]);
   //valid set of paths for each target
   const [validTargetPath, setValidTargetPath] = useState<any>([]);
-  //current path selected
-  const [currentTarget, setCurrentTarget] = useState<any[][]>([]);
   //workout List available
   const [workoutList, setWorkoutList] = useState<
     Array<{
-      dateentered: string;
-      workout_name: string;
-      workout_picture: string;
-      custom: boolean;
-      target: string[];
+      dateentered?: string;
+      workout_name?: string;
+      workout_picture?: string;
+      custom?: boolean;
+      target?: string[];
     }>
   >([]);
   //custom workout list available
   const [customWorkoutList, setCustomWorkoutList] = useState<
     Array<{
-      dateentered: string;
+      dateentered?: string;
       workout_name: string;
-      workout_picture: string;
-      custom: boolean;
-      target: string[];
+      workout_picture?: string;
+      custom?: boolean;
+      target?: string[];
     }>
   >([]);
-
+  //Save custom list in case user discard
   const [temporarySaving, setTemporarySaving] = useState<any[]>([]);
 
-  //fetch all workout data
+  //States that controls view mode
+  const [adding, setAdding] = useState(false);
+  const [customOnly, setCustomOnly] = useState(false);
+  const [editing, setEditing] = useState(false);
+
+  // 4 states for path selection
+  const [path1, setPath1] = useState<any>("");
+  const [path2, setPath2] = useState<any>("");
+  const [path3, setPath3] = useState<any>("");
+  const [path4, setPath4] = useState<any>("");
+
+  //Store new name for new workout
+  const [newWorkoutName, setNewWorkoutName] = useState<string>("");
+
+  //fetch all non custom workout data
   const query = `http://localhost:3000/workout`;
   if (workoutList.length === 0) {
     fetch(query)
@@ -85,7 +103,7 @@ const WorkoutListPage = () => {
         console.error(error);
       });
   }
-  //get custom workout list
+  //get custom workout list for the user
   useEffect(() => {
     const customQuery = `http://localhost:3000/customWorkout/${userData?._id}`;
     if (customWorkoutList.length === 0) {
@@ -102,6 +120,7 @@ const WorkoutListPage = () => {
     }
   }, []);
 
+  //Set options for target path
   let option1: any[] = [];
   let option2: any[] = [];
   let option3: any[] = [];
@@ -122,38 +141,145 @@ const WorkoutListPage = () => {
     }
   });
 
-  //States that controls view mode
-  const [adding, setAdding] = useState(false);
-  const [customOnly, setCustomOnly] = useState(false);
-  const [editing, setEditing] = useState(false);
-
-  // 4 states for path selection
-  const [path1, setPath1] = useState<any>("");
-  const [path2, setPath2] = useState<any>("");
-  const [path3, setPath3] = useState<any>("");
-  const [path4, setPath4] = useState<any>("");
   const discardWorkoutChange = () => {
     setCustomWorkoutList(temporarySaving);
   };
   const saveWorkout = () => {
-    if (
-      customWorkoutList?.some(
-        (workout: any) =>
-          workout.workout_name === undefined ||
-          workout.workout_name === null ||
-          workout.workout_name === ""
-      )
-    ) {
-      Swal.fire({
-        icon: "error",
-        title: "Please fill in all workout title",
-      });
-      return;
-    }
+    if (editing) {
+      //Input Validation
+      if (
+        customWorkoutList?.some(
+          (workout: any) =>
+            workout.workout_name === undefined ||
+            workout.workout_name === null ||
+            workout.workout_name === ""
+        )
+      ) {
+        Swal.fire({
+          icon: "error",
+          title: "Please fill in all workout title",
+        });
+        return;
+      }
 
-    setEditing(false);
+      //Save change to custom workout to Database
+      customWorkoutList.forEach((workout: any) => {
+        const query = `http://localhost:3000/updateCustomWorkout/${workout._id}`;
+        fetch(query, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(workout),
+        })
+          .then((response) => response.json())
+          .then((data) => {})
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      });
+      //Save custom workouts locally
+      const customWorkoutNames = customWorkoutList.map(
+        (workout) => workout.workout_name
+      );
+      userData!.customWorkout = customWorkoutNames;
+      setUser(userData);
+
+      //Save custom workout to database
+      const query = `http://localhost:3000/update/${userData?._id}`;
+      fetch(query, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      })
+        .then((response) => response.json())
+        .then((data) => {})
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+      setEditing(false);
+      //Edited: post to Workout
+      //Deketed: put to User.
+    } else if (adding) {
+      //Input Validation
+      let currentTargetPath: string[] = [];
+      if (path1) currentTargetPath.push(path1.value);
+      if (path2) currentTargetPath.push(path2.value);
+      if (path3) currentTargetPath.push(path3.value);
+      if (path4) currentTargetPath.push(path4.value);
+      if (
+        !newWorkoutName ||
+        newWorkoutName.trim() === "" ||
+        !arrayContainsArray(validTargetPath, currentTargetPath)
+      ) {
+        Swal.fire({
+          icon: "error",
+          title: "Please check your input",
+        });
+        return;
+      }
+      // Create a new WOrkout
+      fetch("http://localhost:3000/newCustomWorkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          workout_name: newWorkoutName,
+          custom: true,
+          target: currentTargetPath,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          //Fetch its ID, and update customWorkout List
+          setCustomWorkoutList([...customWorkoutList, data]);
+          const updatedCustomWorkout = [...userData!.customWorkout, data._id];
+          userData!.customWorkout = updatedCustomWorkout;
+          setUser(userData);
+          return fetch(`http://localhost:3000/update/${userData?._id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(userData),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              console.log(userData);
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+      console.log("User Data (1)", userData);
+
+      // fetch(`http://localhost:3000/update/${userData?._id}`, {
+      //   method: "PUT",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(userData),
+      // })
+      //   .then((response) => response.json())
+      //   .then((data) => {
+      //     console.log("Second Call");
+      //   })
+      //   .catch((error) => {
+      //     console.error("Error:", error);
+      //   });
+      setAdding(false);
+    }
   };
 
+  //Handle drop down change
   useEffect(() => {
     setPath2("");
     setPath3("");
@@ -173,7 +299,7 @@ const WorkoutListPage = () => {
     setPath4("");
   };
   const test = () => {
-    console.log(customWorkoutList);
+    console.log(userData);
   };
   return (
     <div>
@@ -280,6 +406,7 @@ const WorkoutListPage = () => {
                     placeholder="Workout Name"
                     className="form-control"
                     id="title"
+                    onChange={(e) => setNewWorkoutName(e.target.value)}
                   />
                 </div>
               </form>
@@ -291,17 +418,13 @@ const WorkoutListPage = () => {
             </div>
 
             <button
-              onClick={() => {
-                setAdding(false);
-              }}
+              onClick={() => saveWorkout()}
               className="btn btn-success col-4 col-sm-4 col-md-3 col-lg-2"
             >
               Save Workout
             </button>
             <button
-              onClick={() => {
-                setAdding(false);
-              }}
+              onClick={() => saveWorkout()}
               className="btn btn-secondary col-4 col-sm-4 col-md-3 col-lg-2"
             >
               Cancel
@@ -309,53 +432,22 @@ const WorkoutListPage = () => {
           </div>
         ) : (
           <div className="col-12 row mt-2 justify-content-center">
-            <button
-              onClick={() => {
-                clearPath();
-                setAdding(true);
-              }}
-              className="btn btn-outline-primary col-4 col-sm-4 col-md-3 col-lg-2"
-            >
-              Add Custom Workout
-            </button>
+            {!editing && (
+              <button
+                onClick={() => {
+                  clearPath();
+                  setAdding(true);
+                }}
+                className="btn btn-outline-primary col-4 col-sm-4 col-md-3 col-lg-2"
+              >
+                Add Custom Workout
+              </button>
+            )}
           </div>
         )}
       </div>
-      <div className="mt-3 row d-flex">
-        <div className="col-12 col-md-6  d-flex justify-content-center">
-          {editing ? (
-            <div className=" d-flex " style={{ gap: "10px" }}>
-              <button
-                className="btn btn-success"
-                onClick={() => {
-                  saveWorkout();
-                }}
-              >
-                Save Changes
-              </button>
-              <button
-                className="btn btn-danger"
-                onClick={() => {
-                  discardWorkoutChange();
-                  setEditing(!editing);
-                }}
-              >
-                Discard
-              </button>
-            </div>
-          ) : (
-            <button
-              className="btn btn-outline-primary"
-              onClick={() => {
-                setTemporarySaving(customWorkoutList);
-                setEditing(!editing);
-              }}
-            >
-              Edit Custom Workout
-            </button>
-          )}
-        </div>
 
+      <div className="mt-3 row d-flex">
         <div
           className="mt-1 col-12 col-md-6 d-flex justify-content-center"
           style={{ gap: "10px" }}
@@ -369,6 +461,41 @@ const WorkoutListPage = () => {
           />
           <h5 style={{ marginTop: "0.5rem" }}>Only Show Custom Workouts</h5>
         </div>
+        {!adding && (
+          <div className="col-12 col-md-6  d-flex justify-content-center">
+            {editing ? (
+              <div className=" d-flex " style={{ gap: "10px" }}>
+                <button
+                  className="btn btn-success"
+                  onClick={() => {
+                    saveWorkout();
+                  }}
+                >
+                  Save Changes
+                </button>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => {
+                    discardWorkoutChange();
+                    setEditing(!editing);
+                  }}
+                >
+                  Discard
+                </button>
+              </div>
+            ) : (
+              <button
+                className="btn btn-outline-primary"
+                onClick={() => {
+                  setTemporarySaving(customWorkoutList);
+                  setEditing(!editing);
+                }}
+              >
+                Edit Custom Workout
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="mt-4 row d-flex flex-row">

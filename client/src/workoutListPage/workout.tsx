@@ -35,7 +35,6 @@ const Workout: React.FC<WorkoutProps> = ({
   };
   return (
     <div className="col-12 col-sm-6 col-md-4 col-lg-3">
-      <div>TEST {description}</div>
       <div
         className="mb-4 pt-2 text-center"
         style={{
