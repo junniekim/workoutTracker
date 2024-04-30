@@ -8,7 +8,6 @@ import WorkoutJournal from "./workoutJournal";
 import { useUser } from "../SesssionManager/session";
 import "react-calendar/dist/Calendar.css";
 import "./workoutLogPage.css";
-//PICK BACK UP FROM HERE. GET WORKOUTS SPLIT INTO CARDIO AND WEIGHT TRANIING ALSO CUSTOM
 
 const WorkoutLogPage = () => {
   //helper
@@ -79,7 +78,6 @@ const WorkoutLogPage = () => {
         return;
       }
       //see if there is any data entered
-      console.log(currentDayWorkout?.workout_list);
       if (currentDayWorkout !== null) {
         //see if the data already exists
         // If no, create, if yes, update

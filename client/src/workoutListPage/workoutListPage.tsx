@@ -165,7 +165,7 @@ const WorkoutListPage = () => {
         return;
       }
 
-      //Save change to custom workout to Database
+      //Save change to custom workout to Database such as name change or path change
       customWorkoutList.forEach((workout: any) => {
         const query = `http://localhost:3000/updateCustomWorkout/${workout._id}`;
         fetch(query, {
@@ -188,7 +188,7 @@ const WorkoutListPage = () => {
       userData!.customWorkout = customWorkoutNames;
       setUser(userData);
 
-      //Save custom workout to database
+      //Save user's custom list to database
       const query = `http://localhost:3000/update/${userData?._id}`;
       fetch(query, {
         method: "PUT",
@@ -202,9 +202,15 @@ const WorkoutListPage = () => {
         .catch((error) => {
           console.error("Error:", error);
         });
+
+      //If deleted, it should be removed from history
+      //Loop through user's workout history and remove the workout that is deleted
+      //If the ID does not map to anything, means it is deleted
+
+      //If edited, it should be updated in history
+      //Loop through user's workout history, and update the workout that is edited.
+      //
       setEditing(false);
-      //Edited: post to Workout
-      //Deketed: put to User.
     } else if (adding) {
       //Input Validation
       let currentTargetPath: string[] = [];
@@ -249,7 +255,6 @@ const WorkoutListPage = () => {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           //Fetch its ID, and update customWorkout List
           setCustomWorkoutList([...customWorkoutList, data]);
           const updatedCustomWorkout = [...userData!.customWorkout, data._id];
@@ -263,10 +268,7 @@ const WorkoutListPage = () => {
             body: JSON.stringify(userData),
           })
             .then((response) => response.json())
-            .then((data) => {
-              console.log(data);
-              console.log(userData);
-            })
+            .then((data) => {})
             .catch((error) => {
               console.error("Error:", error);
             });
@@ -274,7 +276,6 @@ const WorkoutListPage = () => {
         .catch((error) => {
           console.error("Error:", error);
         });
-      console.log("User Data (1)", userData);
 
       clearPath();
       setAdding(false);

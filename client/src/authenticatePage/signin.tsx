@@ -41,9 +41,7 @@ const SignIn = (props: any) => {
           method: "PUT",
         })
           .then((response) => response.json())
-          .then((data) => {
-            console.log(data);
-          })
+          .then((data) => {})
           .catch((error) => {
             console.error("Error:", error);
           });

@@ -15,7 +15,6 @@ const ProfilePage = () => {
     if (mode === "view") {
       setMode("edit");
     } else {
-      console.log(JSON.stringify(temporaryChanges));
       setUser(temporaryChanges);
       const query = `http://localhost:3000/update/${userData?._id}`;
       fetch(query, {
@@ -37,17 +36,13 @@ const ProfilePage = () => {
     }
   };
 
-  const deleteProfilePicture = (): void => {
-    console.log("delete profile picture");
-  };
+  const deleteProfilePicture = (): void => {};
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedFile(event.target.files ? event.target.files[0] : null);
   };
 
-  const updateProfilePicture = (): void => {
-    console.log("update profile picture");
-  };
+  const updateProfilePicture = (): void => {};
   const deleteHandler = (): void => {
     Swal.fire({
       title: "Are you sure you want to delete your account?",
@@ -72,9 +67,7 @@ const ProfilePage = () => {
           .then((response) => {
             return response.json();
           })
-          .then((data) => {
-            console.log(data);
-          })
+          .then((data) => {})
           .catch((error) => {
             console.error(error);
           });

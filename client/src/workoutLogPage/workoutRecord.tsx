@@ -60,7 +60,6 @@ const WorkoutRecord: React.FC<WorkoutRecordProps> = ({
                 ? cardioWorkoutListArr.push(workout.workout_name)
                 : weightWorkoutListArr.push(workout.workout_name);
             } else {
-              console.log("Check", userData);
               if (
                 userData!.customWorkout.includes(workout._id) ||
                 userData!.customWorkout.includes(workout.workout_name)
@@ -71,6 +70,7 @@ const WorkoutRecord: React.FC<WorkoutRecordProps> = ({
               }
             }
           });
+          console.log(cardioWorkoutListArr, weightWorkoutListArr);
           setCardioWorkoutList(cardioWorkoutListArr);
           setWeightWorkoutList(weightWorkoutListArr);
         })
@@ -104,17 +104,9 @@ const WorkoutRecord: React.FC<WorkoutRecordProps> = ({
   //     })
   //     .catch((error) => {});
   // }
-  const test = () => {
-    console.log(userData);
-    console.log(cardioWorkoutList);
-    console.log(weightWorkoutList);
-  };
 
   return (
     <>
-      <button className="btn btn-priamry" onClick={() => test()}>
-        Click me
-      </button>
       {editing ? (
         <tr>
           <td>

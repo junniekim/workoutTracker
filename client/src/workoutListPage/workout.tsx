@@ -24,12 +24,10 @@ const Workout: React.FC<WorkoutProps> = ({
   const deleteWorkout = () => {
     dataChange &&
       dataChange((prevState: any) => {
-        console.log(prevState);
         // Filter out the element at the specified index
         const newState: any[] = prevState.filter(
           (_: any, i: number) => i !== index
         );
-        console.log(newState);
         return newState;
       });
   };

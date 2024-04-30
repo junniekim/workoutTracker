@@ -38,7 +38,6 @@ const SignUp = (props: any) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setUser(data);
         Swal.fire(
           "Welcome to Moosecles!",
