@@ -77,33 +77,6 @@ const WorkoutRecord: React.FC<WorkoutRecordProps> = ({
         .catch((error) => {});
     }
   }, []);
-  //////////////////////////////////////////////////////////////////////////////////
-
-  // const query = `http://localhost:3000/workout`;
-  // if (weightWorkoutList.length == 0 || cardioWorkoutList.length == 0) {
-  //   fetch(query)
-  //     .then((response) => {
-  //       return response.json();
-  //     })
-  //     .then((data) => {
-  //       data.filter((workout: any) => {
-  //         if (workout.custom === false) {
-  //           workout.target[0] === "Cardio"
-  //             ? cardioWorkoutListArr.push(workout.workout_name)
-  //             : weightWorkoutListArr.push(workout.workout_name);
-  //         } else {
-  //           if (userData!.customWorkout.includes(workout._id)) {
-  //             workout.target[0] === "Cardio"
-  //               ? cardioWorkoutListArr.push(workout.workout_name)
-  //               : weightWorkoutListArr.push(workout.workout_name);
-  //           }
-  //         }
-  //       });
-  //       setCardioWorkoutList(cardioWorkoutListArr);
-  //       setWeightWorkoutList(weightWorkoutListArr);
-  //     })
-  //     .catch((error) => {});
-  // }
 
   return (
     <>
