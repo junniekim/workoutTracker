@@ -1,0 +1,45 @@
+.navigation {
+  //align-items: center;
+  margin-top: 15px;
+}
+.navHeader {
+}
+.header {
+  font-weight: 450;
+}
+.hamburger {
+  display: none;
+  margin-left: auto;
+}
+.navButtonHolder {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 20px;
+  gap: 19px;
+}
+.collapsed-menu {
+  display: flex;
+  flex-direction: column;
+}
+.navButton {
+  color: black;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 500;
+}
+.navButton:hover {
+  color: grey;
+}
+.active {
+  color: grey;
+}
+
+@media (max-width: 768px) {
+  .navButtonHolder {
+    display: none;
+  }
+
+  .hamburger {
+    display: block;
+  }
+}

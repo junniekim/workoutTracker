@@ -8,20 +8,35 @@ import ProfilePage from "./profilePage/profilePage";
 import ProgressPage from "./progressPage/progressPage";
 import WorkoutListPage from "./workoutListPage/workoutListPage";
 import WorkoutLogPage from "./workoutLogPage/workoutLogPage";
-import NavigationBar from "./Navigation/navigationBar";
+import NavigationBar from "./navigation/navigationBar";
+import Footer from "./footer/footer";
+import { useUser } from "./SesssionManager/session";
 function App() {
+  const { userData } = useUser();
   return (
     <Router>
-      <NavigationBar />
       <div className="container">
+        <NavigationBar />
         <Routes>
+          {userData ? (
+            <>
+              <Route path="/workoutlist" Component={WorkoutListPage} />
+              <Route path="/workoutlog" Component={WorkoutLogPage} />
+              <Route path="/profile" Component={ProfilePage} />
+              <Route path="/progress" Component={ProgressPage} />
+            </>
+          ) : (
+            <>
+              <Route path="/workoutlist" Component={HomePage} />
+              <Route path="/workoutlog" Component={HomePage} />
+              <Route path="/profile" Component={HomePage} />
+              <Route path="/progress" Component={HomePage} />
+            </>
+          )}
           <Route path="/" Component={HomePage} />
           <Route path="/authenticate" Component={AuthenticatePage} />
-          <Route path="/profile" Component={ProfilePage} />
-          <Route path="/progress" Component={ProgressPage} />
-          <Route path="/workoutlist" Component={WorkoutListPage} />
-          <Route path="/workoutlog" Component={WorkoutLogPage} />
         </Routes>
+        <Footer />
       </div>
     </Router>
   );

@@ -40,3 +40,32 @@
 .read-the-docs {
   color: #888;
 } */
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+.align-text-center {
+  align-items: center;
+}
+.grey {
+  color: grey;
+}
+.text-button {
+  background: none;
+  border: none;
+  color: black;
+}
+.text-button:hover {
+  color: blue;
+}
+
+.text-button-delete {
+  background: none;
+  border: none;
+  color: black;
+}
+.text-button-delete:hover {
+  color: red;
+}
